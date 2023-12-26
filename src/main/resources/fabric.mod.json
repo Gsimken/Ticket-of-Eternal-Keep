@@ -1,0 +1,41 @@
+{
+	"schemaVersion": 1,
+	"id": "ticket-of-eternal-keep",
+	"version": "${version}",
+	"name": "Ticket of Eternal Keep",
+	"description": "A Ticket thats keep all the inventory after death",
+	"authors": [
+		"Me!"
+	],
+	"contact": {
+		"homepage": "https://fabricmc.net/",
+		"sources": "https://github.com/FabricMC/fabric-example-mod"
+	},
+	"license": "MIT",
+	"icon": "assets/ticket-of-eternal-keep/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"net.gsimken.TicketOfEternalKeep"
+		],
+		"client": [
+			"net.gsimken.TicketOfEternalKeepClient"
+		]
+	},
+	"mixins": [
+		"ticket-of-eternal-keep.mixins.json",
+		{
+			"config": "ticket-of-eternal-keep.client.mixins.json",
+			"environment": "client"
+		}
+	],
+	"depends": {
+		"fabricloader": ">=0.15.3",
+		"minecraft": "~1.20.4",
+		"java": ">=17",
+		"fabric-api": "*"
+	},
+	"suggests": {
+		"another-mod": "*"
+	}
+}

@@ -1,0 +1,7 @@
+{
+  "item.ticket_of_eternal_keep.name": "Ticket of Eternal Keeping",
+  "item.ticket_of_eternal_keep.lore_l1": "Este ticket permite a quién lo lleve",
+
+  "item.ticket_of_eternal_keep.lore_l2": "en el inventario mantener sus ítems al morir.",
+  "item.ticket_of_eternal_keep.lore_l3": "Se consume al morir"
+}

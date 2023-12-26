@@ -1,0 +1,17 @@
+{
+	"required": true,
+	"package": "net.gsimken.mixin",
+	"compatibilityLevel": "JAVA_17",
+	"mixins": [
+      "LivingEntityMixin",
+		"ServerPlayerEntityMixin"
+	],
+	"client": [],
+	"server": [
+		"LivingEntityMixin",
+		"ServerPlayerEntityMixin"
+	],
+	"injectors": {
+		"defaultRequire": 1
+	}
+}
