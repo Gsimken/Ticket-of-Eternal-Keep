@@ -17,6 +17,7 @@ import net.minecraft.nbt.NbtString;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -82,17 +83,19 @@ public class ModLootTableModifier {
     private static NbtCompound applyCustomNbt() {
         NbtCompound nbt = new NbtCompound();
         NbtCompound displayNbt = new NbtCompound();
-        displayNbt.putString("Name", "[{'text':'\\ud83d\\udd06','bold':true,'italic':false,'color':'gold'},{'translate':'item.ticket_of_eternal_keep.name','bold':true,'italic':false,'color':'gold'},{'text':'\\ud83d\\udd06','bold':true,'italic':false,'color':'gold'}]");
-        String loreLine1 = "{'translate':'item.ticket_of_eternal_keep.lore_l1','italic':false}";
-        String loreLine2 = "{'translate':'item.ticket_of_eternal_keep.lore_l2','italic':false}";
-        String loreLine3 = "{'text':'','italic':false}";
-        String loreLine4 = "[{'text':'\\u26a0','color':'yellow','italic':false},{'translate':'item.ticket_of_eternal_keep.lore_l3','bold':false,'italic':false,'color':'dark_red'},{'text':'\\u26a0','color':'yellow','italic':false}]";
+        ArrayList<Text> keys= new ArrayList<Text>();
 
+        keys.add(Text.translatable("item.ticket_of_eternal_keep.lore_l1"));
+        keys.add(Text.translatable("item.ticket_of_eternal_keep.lore_l2"));
+
+        displayNbt.putString("Name", String.format("[{'text':'\\ud83d\\udd06','bold':true,'italic':false,'color':'gold'},{'text':'%s','bold':true,'italic':false,'color':'gold'},{'text':'\\ud83d\\udd06','bold':true,'italic':false,'color':'gold'}]", Text.translatable("item.ticket_of_eternal_keep.name").getString()));
         NbtList loreList = new NbtList();
-        loreList.add(NbtString.of(loreLine1.replace("'", "\"")));
-        loreList.add(NbtString.of(loreLine2.replace("'", "\"")));
-        loreList.add(NbtString.of(loreLine3.replace("'", "\"")));
-        loreList.add(NbtString.of(loreLine4.replace("'", "\"")));
+        for (Text key: keys) {
+            String loreLine = String.format("{'text':'%s','italic':false}",key.getString());
+            loreList.add(NbtString.of(loreLine));
+        }
+        loreList.add(NbtString.of("{'text':'','italic':false}"));
+        loreList.add(NbtString.of(String.format("[{'text':'\\u26a0','color':'yellow','italic':false},{'text':'%s','bold':false,'italic':false,'color':'dark_red'},{'text':'\\u26a0','color':'yellow','italic':false}]",Text.translatable("item.ticket_of_eternal_keep.lore_l3").getString())));
         displayNbt.put("Lore", loreList);
         nbt.put("display", displayNbt);
         nbt.putBoolean(TicketOfEternalKeep.nbtName, true);
