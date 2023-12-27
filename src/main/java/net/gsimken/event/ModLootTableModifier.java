@@ -97,6 +97,7 @@ public class ModLootTableModifier {
         nbt.put("display", displayNbt);
         nbt.putBoolean(TicketOfEternalKeep.nbtName, true);
         nbt.putInt("HideFlags", 1);
+        nbt.putInt("CustomModelData", 506); //Id for my custom resource pack to change texture
 
         NbtList enchList = new NbtList();
         NbtCompound ench = new NbtCompound();
