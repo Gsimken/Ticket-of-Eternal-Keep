@@ -2,6 +2,7 @@ package net.gsimken.event;
 
 import net.fabricmc.fabric.api.loot.v2.LootTableEvents;
 import net.gsimken.TicketOfEternalKeep;
+import net.gsimken.config.ModConfig;
 import net.minecraft.enchantment.Enchantments;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -19,6 +20,7 @@ import net.minecraft.util.Identifier;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class ModLootTableModifier {
@@ -80,37 +82,40 @@ public class ModLootTableModifier {
             });
         }
 //Make an nbt to apply to item in loot table
-    private static NbtCompound applyCustomNbt() {
-        NbtCompound nbt = new NbtCompound();
-        NbtCompound displayNbt = new NbtCompound();
-        ArrayList<Text> keys= new ArrayList<Text>();
+private static NbtCompound applyCustomNbt() {
+    NbtCompound nbt = new NbtCompound();
+    NbtCompound displayNbt = new NbtCompound();
 
-        keys.add(Text.translatable("item.ticket_of_eternal_keep.lore_l1"));
-        keys.add(Text.translatable("item.ticket_of_eternal_keep.lore_l2"));
+    // Obtener el nombre y el lore de la configuración
+    ModConfig modConfig = TicketOfEternalKeep.configManager.getConfig();
+    String name = modConfig.getName();
+    List<String> loreLines = modConfig.getLore();
 
-        displayNbt.putString("Name", String.format("[{'text':'\\ud83d\\udd06','bold':true,'italic':false,'color':'gold'},{'text':'%s','bold':true,'italic':false,'color':'gold'},{'text':'\\ud83d\\udd06','bold':true,'italic':false,'color':'gold'}]", Text.translatable("item.ticket_of_eternal_keep.name").getString()));
-        NbtList loreList = new NbtList();
-        for (Text key: keys) {
-            String loreLine = String.format("{'text':'%s','italic':false}",key.getString());
-            loreList.add(NbtString.of(loreLine));
-        }
-        loreList.add(NbtString.of("{'text':'','italic':false}"));
-        loreList.add(NbtString.of(String.format("[{'text':'\\u26a0','color':'yellow','italic':false},{'text':'%s','bold':false,'italic':false,'color':'dark_red'},{'text':'\\u26a0','color':'yellow','italic':false}]",Text.translatable("item.ticket_of_eternal_keep.lore_l3").getString())));
-        displayNbt.put("Lore", loreList);
-        nbt.put("display", displayNbt);
-        nbt.putBoolean(TicketOfEternalKeep.nbtName, true);
-        nbt.putInt("HideFlags", 1);
-        nbt.putInt("CustomModelData", 506); //Id for my custom resource pack to change texture
+    // Configurar el nombre (usando tu formato existente)
+    displayNbt.putString("Name", String.format("{'text':'%s'}", name));
 
-        NbtList enchList = new NbtList();
-        NbtCompound ench = new NbtCompound();
-        ench.putString("id", "minecraft:binding_curse");
-        ench.putInt("lvl", 1);
-        enchList.add(ench);
-        nbt.put("Enchantments", enchList);
-
-        return nbt;
+    // Añadir las líneas de lore
+    NbtList loreList = new NbtList();
+    for (String loreLine : loreLines) {
+        loreList.add(NbtString.of(String.format("{'text':'%s'}", loreLine)));
     }
+    displayNbt.put("Lore", loreList);
+
+    nbt.put("display", displayNbt);
+    nbt.putBoolean(TicketOfEternalKeep.nbtName, true);
+    nbt.putInt("HideFlags", 1);
+    nbt.putInt("CustomModelData", modConfig.getCustomModelDataNumber());
+
+    // Añadir el encantamiento Curse of Binding (si es necesario)
+    NbtList enchList = new NbtList();
+    NbtCompound ench = new NbtCompound();
+    ench.putString("id", "minecraft:binding_curse");
+    ench.putInt("lvl", 1);
+    enchList.add(ench);
+    nbt.put("Enchantments", enchList);
+
+    return nbt;
+}
     }
 
 
