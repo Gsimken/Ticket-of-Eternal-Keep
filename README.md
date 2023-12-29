@@ -25,7 +25,7 @@ This mod is designed to work on the server side. It provides a convenient soluti
 ## Future Work
 The development team of the "Ticket of Eternal Keeping" mod is continuously working on improvements and expansions. The roadmap for future updates includes:
 
-- **Textures for Clients with the Mod Installed**: The team is looking into allowing clients with the mod installed to see a unique texture for the "Ticket of Eternal Keeping".
+-  ~~**Textures for Clients with the Mod Installed**: The team is looking into allowing clients with the mod installed to see a unique texture for the "Ticket of Eternal Keeping".~~
 - **Item Configurability**: Plans are in place to make the item used for the "Ticket of Eternal Keeping" configurable, allowing server administrators or players to customize the specific item to be used.
 - **Customization of Name and Description**: Future versions aim to enable the customization of the item's name and description through configuration files.
 - **Configurable Crafting**: An option to enable or disable the crafting of the item within the game is planned.
