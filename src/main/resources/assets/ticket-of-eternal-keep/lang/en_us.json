@@ -1,6 +1,3 @@
 {
-  "item.ticket_of_eternal_keep.name": "Ticket of Eternal Keeping",
-  "item.ticket_of_eternal_keep.lore_l1": "This ticket allows whoever carries it",
-  "item.ticket_of_eternal_keep.lore_l2": "in the inventory to keep their items when they die.",
-  "item.ticket_of_eternal_keep.lore_l3": "It is consumed at death"
+  "command.ticket_of_eternal_keep.give_successfully": "Item given"
 }

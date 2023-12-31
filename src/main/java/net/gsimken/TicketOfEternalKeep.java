@@ -2,6 +2,8 @@ package net.gsimken;
 
 import net.fabricmc.api.ModInitializer;
 
+import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
+import net.gsimken.commands.GetTicketCommand;
 import net.gsimken.config.ConfigManager;
 import net.gsimken.event.ModLootTableModifier;
 import net.minecraft.item.Item;
@@ -25,6 +27,7 @@ public class TicketOfEternalKeep implements ModInitializer {
 		// However, some things (like resources) may still be uninitialized.
 		// Proceed with mild caution.
 		ModLootTableModifier.modifyLootTables();
+		CommandRegistrationCallback.EVENT.register(GetTicketCommand::register);
 
 	}
 }
