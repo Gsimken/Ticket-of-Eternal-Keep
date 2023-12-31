@@ -12,7 +12,7 @@ The "Ticket of Eternal Keeping" can be found in various structures within the ga
 | Mineshaft       | 3%                     |
 | Stronghold      | 5%                     |
 | End Cities      | 5%                     |
-| Bastions        | 10%                    |
+| Bastions        | 15%                    |
 | Villages        | 0.5%                   |
 | Ruined Portals  | 0.5%                   |
 | Shipwrecks      | 0.5%                   |
@@ -26,8 +26,8 @@ This mod is designed to work on the server side. It provides a convenient soluti
 The development team of the "Ticket of Eternal Keeping" mod is continuously working on improvements and expansions. The roadmap for future updates includes:
 
 -  ~~**Textures for Clients with the Mod Installed**: The team is looking into allowing clients with the mod installed to see a unique texture for the "Ticket of Eternal Keeping".~~
-- **Item Configurability**: Plans are in place to make the item used for the "Ticket of Eternal Keeping" configurable, allowing server administrators or players to customize the specific item to be used.
-- **Customization of Name and Description**: Future versions aim to enable the customization of the item's name and description through configuration files.
+- ~~**Item Configurability**: Plans are in place to make the item used for the "Ticket of Eternal Keeping" configurable, allowing server administrators or players to customize the specific item to be used.~~
+- ~~**Customization of Name and Description**: Future versions aim to enable the customization of the item's name and description through configuration files.~~
 - **Configurable Crafting**: An option to enable or disable the crafting of the item within the game is planned.
 - **Adjustable Locations and Probabilities**: Features that allow the adjustment of locations and probabilities for finding the "Ticket of Eternal Keeping" in various game structures are intended to be implemented.
 
