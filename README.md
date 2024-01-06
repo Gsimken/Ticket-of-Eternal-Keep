@@ -17,10 +17,38 @@ The "Ticket of Eternal Keeping" can be found in various structures within the ga
 | Ruined Portals  | 0.5%                   |
 | Shipwrecks      | 0.5%                   |
 
+## Config
+the Toek item is configurable, the file is located in the folder .minecraft/config (or server_folder/config for servers) and is named ToEK.json
+```json
+{
+  "item": "minecraft:paper",
+  "name": "&6Ticket of Eternal Keeping",
+  "lore": [
+    "&bThis ticket allows whoever carries it",
+    "&bin the inventory to keep their items when they die.",
+    "",
+    "&4&lIt is consumed at death"
+  ],
+  "CustomModelDataNumber": 506
+}
+```
+In this file there are some configurable fields, it also accepts '&' for color codes.
+
+`item`: allows you to change the item that the game uses for the ticket; however, doing this removes the textures in the client, it is important to know that the chosen item can still be used for recipes and fulfill its functions, for example, choosing a block and using the right click can cause the object to be lost.
+
+`name`: change the name
+
+`lore`: is the description of the item, it accepts as many lines as you like, just add a new one between the square brackets ('[')
+
+`CustomModeDataNumber`: number used for custom texture pack, with this it is possible to force a texture pack from the server to the players so they can have a desired texture for the item.
+
+
 ## Installation
 To install this mod, simply download the `.jar` file and place it in your Minecraft mods folder.
 This mod is designed to work on the server side. It provides a convenient solution for server administrators who want to enhance the gameplay experience without requiring players to install additional mods.
 
+## Commands
+Toek has a command that allows an operator or whoever has the `toek.command.getticket` permission to generate a ticket at will, this ticket can be given to the player who invokes the command using `/getticket` or to another player using `/getticket playerName`.
 
 ## Future Work
 The development team of the "Ticket of Eternal Keeping" mod is continuously working on improvements and expansions. The roadmap for future updates includes:
