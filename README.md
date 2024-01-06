@@ -47,6 +47,9 @@ In this file there are some configurable fields, it also accepts '&' for color c
 To install this mod, simply download the `.jar` file and place it in your Minecraft mods folder.
 This mod is designed to work on the server side. It provides a convenient solution for server administrators who want to enhance the gameplay experience without requiring players to install additional mods.
 
+
+In case you want users to have texture you can use the texture pack from the following [release](https://github.com/Gsimken/Ticket-of-Eternal-Keep/releases/tag/V1.1.0) on the server
+
 ## Commands
 Toek has a command that allows an operator or whoever has the `toek.command.getticket` permission to generate a ticket at will, this ticket can be given to the player who invokes the command using `/getticket` or to another player using `/getticket playerName`.
 
