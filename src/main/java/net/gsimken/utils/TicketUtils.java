@@ -3,7 +3,6 @@ package net.gsimken.utils;
 import net.gsimken.TicketOfEternalKeep;
 import net.gsimken.config.ModConfig;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtList;
 import net.minecraft.nbt.NbtString;
@@ -50,12 +49,13 @@ public class TicketUtils {
         List<String> loreLines = modConfig.getLore();
 
         // Configurar el nombre (usando tu formato existente)
-        displayNbt.putString("Name", String.format("{'text':'%s'}", name));
+        displayNbt.putString("Name", String.format("{\"text\":\"%s\"}", name));
 
         // Añadir las líneas de lore
         NbtList loreList = new NbtList();
         for (String loreLine : loreLines) {
-            loreList.add(NbtString.of(String.format("{'text':'%s'}", loreLine)));
+            loreList.add(NbtString.of(String.format("{\"text\":\"%s\"}", loreLine)));
+
         }
         displayNbt.put("Lore", loreList);
 
