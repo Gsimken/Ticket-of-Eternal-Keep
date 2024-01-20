@@ -41,4 +41,11 @@ public class ModConfig {
     public void setCustomModelDataNumber(int customModelDataNumber) {
         CustomModelDataNumber = customModelDataNumber;
     }
+
+    public String printConfig(){
+        return String.format("========TOEK Config========\nItem:%s\nItem Name: %s\n Lore: %s\nCustom Model Data Numbre:%d\n===========================",
+                item,name,lore,CustomModelDataNumber
+                );
+
+    }
 }
