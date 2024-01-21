@@ -24,6 +24,7 @@ public class ConfigManager {
 
     public void loadConfig() {
         try {
+            createConfigDirectoryIfNeeded();
             if (!Files.exists(CONFIG_PATH)) {
                 saveDefaultConfig();
             }
@@ -49,14 +50,19 @@ public class ConfigManager {
     }
 
     private void saveDefaultConfig() {
-        config = new ModConfig();
-        config.setItem("minecraft:paper");
-        config.setName("&6Ticket of Eternal Keeping");
-        config.setLore(List.of("&bThis ticket allows whoever carries it", "&bin the inventory to keep their items when they die.", "", "&4&lIt is consumed at death"));
-        config.setCustomModelDataNumber(506);
+        try {
+            createConfigDirectoryIfNeeded();
+            config = new ModConfig();
+            config.setItem("minecraft:paper");
+            config.setName("&6Ticket of Eternal Keeping");
+            config.setLore(List.of("&bThis ticket allows whoever carries it", "&bin the inventory to keep their items when they die.", "", "&4&lIt is consumed at death"));
+            config.setCustomModelDataNumber(506);
 
-        try (FileWriter writer = new FileWriter(CONFIG_PATH.toFile())) {
-            GSON.toJson(config, writer);
+            try (FileWriter writer = new FileWriter(CONFIG_PATH.toFile())) {
+                GSON.toJson(config, writer);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -67,6 +73,12 @@ public class ConfigManager {
     }
     private String replaceFormatSymbols(String text) {
         return text.replace("&", "\u00A7");
+    }
+    private void createConfigDirectoryIfNeeded() throws IOException {
+        Path configDir = CONFIG_PATH.getParent();
+        if (!Files.exists(configDir)) {
+            Files.createDirectories(configDir);
+        }
     }
 
 }
