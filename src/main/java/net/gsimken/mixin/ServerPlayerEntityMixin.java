@@ -7,6 +7,7 @@ import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.world.GameRules;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -18,7 +19,7 @@ public class ServerPlayerEntityMixin {
 	@Inject(method = "copyFrom", at = @At("HEAD"), cancellable = true)
 	private void copyFrom(ServerPlayerEntity oldPlayer, boolean alive, CallbackInfo info) {
 
-		if (!alive && TicketUtils.checkForTicket(oldPlayer)) {
+		if (!alive && TicketUtils.checkForTicket(oldPlayer) && !oldPlayer.getWorld().getGameRules().getBoolean(GameRules.KEEP_INVENTORY)) {
 			//Copy old inventory in new simulating keepinventory
 			((PlayerEntity) (Object) this).getInventory().clone(oldPlayer.getInventory());
 			((PlayerEntity) (Object) this).experienceLevel = oldPlayer.experienceLevel;
