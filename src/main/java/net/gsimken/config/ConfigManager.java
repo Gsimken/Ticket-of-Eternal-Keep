@@ -38,7 +38,7 @@ public class ConfigManager {
                 config.setLore(updatedLore);
 
                 try{
-                    Identifier itemId = new Identifier(config.getItem());
+                    Identifier itemId = Identifier.of(config.getItem());
                     TicketOfEternalKeep.ticketItem = Registries.ITEM.get(itemId);
                 }catch (Error e){
                     TicketOfEternalKeep.ticketItem = Items.PAPER;
