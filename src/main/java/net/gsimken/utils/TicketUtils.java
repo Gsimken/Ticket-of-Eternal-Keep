@@ -57,13 +57,7 @@ public class TicketUtils {
         }
         return false;
     }
-    public static ItemStack createTicket(ServerPlayerEntity player) {
-        return createTicket(player.getServerWorld());
-    }
-    public static ItemStack createTicket(World world) {
-        return createTicket(world.getRegistryManager());
-    }
-    public static ItemStack createTicket(RegistryWrapper.WrapperLookup registryLookup) {
+    public static ItemStack createTicket() {
         ItemStack itemStack = new ItemStack(TicketOfEternalKeep.ticketItem);
         ModConfig modConfig = TicketOfEternalKeep.configManager.getConfig();
         String name = modConfig.getName();

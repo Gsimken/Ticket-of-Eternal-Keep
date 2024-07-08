@@ -1,18 +1,16 @@
 package net.gsimken.event;
 
 import net.fabricmc.fabric.api.loot.v3.LootTableEvents;
-import net.fabricmc.fabric.api.loot.v3.LootTableSource;
 import net.gsimken.TicketOfEternalKeep;
 import net.gsimken.utils.TicketUtils;
+import net.minecraft.component.ComponentType;
+import net.minecraft.item.ItemStack;
 import net.minecraft.loot.LootPool;
-import net.minecraft.loot.LootTable;
 import net.minecraft.loot.condition.RandomChanceLootCondition;
 import net.minecraft.loot.entry.ItemEntry;
-import net.minecraft.loot.function.SetCustomDataLootFunction;
-import net.minecraft.loot.provider.number.UniformLootNumberProvider;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.registry.RegistryWrapper;
+import net.minecraft.loot.entry.LeafEntry;
+import net.minecraft.loot.function.SetComponentsLootFunction;
+import net.minecraft.loot.provider.number.ConstantLootNumberProvider;
 import net.minecraft.util.Identifier;
 
 import java.util.HashMap;
@@ -42,42 +40,34 @@ public class ModLootTableModifier {
         LOOT_TABLES_WITH_PROBABILITIES.put(Identifier.of("minecraft", "chests/bastion_hoglin_stable"), 0.15f);
         LOOT_TABLES_WITH_PROBABILITIES.put(Identifier.of("minecraft", "chests/bastion_other"), 0.15f);
         LOOT_TABLES_WITH_PROBABILITIES.put(Identifier.of("minecraft", "chests/bastion_treasure"), 0.15f);
-
-        // Villages
-        String[] villageTypes = new String[]{"armorer", "butcher", "cartographer", "desert_house", "fisher", "fletcher", "mason", "plains_house", "savanna_house", "shepherd", "snowy_house", "taiga_house", "tannery", "temple", "toolsmith", "weaponsmith"};
-        for (String type : villageTypes) {
-            LOOT_TABLES_WITH_PROBABILITIES.put(Identifier.of("minecraft", "chests/village/village_" + type), 0.005f);
-        }
-
-        // Ruined Portals
-        LOOT_TABLES_WITH_PROBABILITIES.put(Identifier.of("minecraft", "chests/ruined_portal"), 0.005f);
-
-        // Shipwrecks
-        LOOT_TABLES_WITH_PROBABILITIES.put(Identifier.of("minecraft", "chests/shipwreck_map"), 0.005f);
-        LOOT_TABLES_WITH_PROBABILITIES.put(Identifier.of("minecraft", "chests/shipwreck_supply"), 0.005f);
-        LOOT_TABLES_WITH_PROBABILITIES.put(Identifier.of("minecraft", "chests/shipwreck_treasure"), 0.005f);
     }
 
-        public static void modifyLootTables() {
-            LootTableEvents.MODIFY.register((RegistryKey<LootTable> key, LootTable.Builder tableBuilder, LootTableSource source, RegistryWrapper.WrapperLookup registries) -> {
-
-                if (LOOT_TABLES_WITH_PROBABILITIES.containsKey(key.getRegistry())) {
-
-                    Float probability = LOOT_TABLES_WITH_PROBABILITIES.get(key.getRegistry());
-                    LootPool pool = LootPool.builder()
-                            .rolls(UniformLootNumberProvider.create(0, 1))
-                            .with(ItemEntry.builder(TicketOfEternalKeep.ticketItem)
-                                    .conditionally(RandomChanceLootCondition.builder(probability))
-                                    .apply(SetCustomDataLootFunction.builder(
-                                            (NbtCompound) TicketUtils.createTicket(registries).encode(registries)
-                                    ))
-                            )
-                            .build();
-                    tableBuilder.pool(pool);
-                }
-            });
-        }
-
+    public static void modifyLootTables() {
+        LootTableEvents.MODIFY.register((key, tableBuilder, source, registries) -> {
+            if (LOOT_TABLES_WITH_PROBABILITIES.containsKey(key.getValue())) {
+                tableBuilder.pool(addTicketToPool(TicketUtils.createTicket(), LOOT_TABLES_WITH_PROBABILITIES.get(key.getValue())));
+            }
+            else if(key.getValue().getPath().startsWith("chests/")) {
+                tableBuilder.pool(addTicketToPool(TicketUtils.createTicket(), 0.005f));
+            }
+        });
     }
+
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    private static LootPool.Builder addTicketToPool(ItemStack ticket, float probability) {
+        LeafEntry.Builder<?> entryBuilder = ItemEntry.builder(TicketOfEternalKeep.ticketItem)
+                .conditionally(RandomChanceLootCondition.builder(probability));
+        ticket.getComponents().stream().forEach((component) -> entryBuilder.apply(
+                SetComponentsLootFunction.builder(
+                        (ComponentType) component.type(),
+                        component.value()
+                )
+        ));
+        entryBuilder.conditionally(RandomChanceLootCondition.builder(probability));
+        return LootPool.builder()
+                .rolls(ConstantLootNumberProvider.create(1))
+                .with(entryBuilder);
+    }
+}
 
 
