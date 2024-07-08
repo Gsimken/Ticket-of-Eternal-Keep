@@ -36,7 +36,7 @@ public class GetTicketCommand {
             player = source.getPlayerOrThrow();
         }
 
-        ItemStack ticket = TicketUtils.createTicket();
+        ItemStack ticket = TicketUtils.createTicket(player);
         boolean itemGiven = player.giveItemStack(ticket);
         if (!itemGiven) {
             player.dropItem(ticket, false);

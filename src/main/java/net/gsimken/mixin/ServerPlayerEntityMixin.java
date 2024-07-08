@@ -19,11 +19,13 @@ public class ServerPlayerEntityMixin {
 	private void copyFrom(ServerPlayerEntity oldPlayer, boolean alive, CallbackInfo info) {
 
 		if (!alive && TicketUtils.checkForTicket(oldPlayer)) {
+			ServerPlayerEntity player = (ServerPlayerEntity) (Object) this;
 			//Copy old inventory in new simulating keepinventory
-			((PlayerEntity) (Object) this).getInventory().clone(oldPlayer.getInventory());
-			((PlayerEntity) (Object) this).experienceLevel = oldPlayer.experienceLevel;
-			((PlayerEntity) (Object) this).totalExperience = oldPlayer.totalExperience;
-			TicketUtils.consumeTicket((ServerPlayerEntity) (Object) this);
+			player.getInventory().clone(oldPlayer.getInventory());
+			player.experienceLevel = oldPlayer.experienceLevel;
+			player.totalExperience = oldPlayer.totalExperience;
+			TicketUtils.consumeTicket(player);
+			TicketUtils.applyVanishCurse(player);
 		}
 	}
 

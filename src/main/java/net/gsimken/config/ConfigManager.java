@@ -15,6 +15,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 public class ConfigManager {
@@ -38,7 +39,7 @@ public class ConfigManager {
                 config.setLore(updatedLore);
 
                 try{
-                    Identifier itemId = new Identifier(config.getItem());
+                    Identifier itemId = Identifier.of(config.getItem());
                     TicketOfEternalKeep.ticketItem = Registries.ITEM.get(itemId);
                 }catch (Error e){
                     TicketOfEternalKeep.ticketItem = Items.PAPER;
