@@ -26,7 +26,7 @@ public class TicketUtils {
                 if (nbt != null && nbt.contains(TicketOfEternalKeep.nbtName)) {
                     // Use copyNbt() method instead of deprecated getNbt()
                     NbtCompound nbtCompound = nbt.copyNbt();
-                    if (nbtCompound.getBoolean(TicketOfEternalKeep.nbtName)) {
+                    if (nbtCompound.getBoolean(TicketOfEternalKeep.nbtName).orElse(false)) {
                         itemStack.decrement(1);
                         break;
                     }
@@ -40,7 +40,8 @@ public class TicketUtils {
             return;
         }
         String vanishCurse = Enchantments.VANISHING_CURSE.getValue().toString();
-        for (ItemStack itemStack : player.getInventory().main) {
+        for (int i = 0; i < player.getInventory().size(); ++i) {
+            ItemStack itemStack = player.getInventory().getStack(i);
             for(RegistryEntry<Enchantment> enchantment : itemStack.getEnchantments().getEnchantments()){
                 if(enchantment.getIdAsString().equals(vanishCurse)){
                     itemStack.setCount(0);
@@ -50,13 +51,14 @@ public class TicketUtils {
     }
 
     public static boolean checkForTicket(ServerPlayerEntity player) {
-        for (ItemStack itemStack : player.getInventory().main) {
+        for (int i = 0; i < player.getInventory().size(); ++i) {
+            ItemStack itemStack = player.getInventory().getStack(i);
             if (itemStack.getItem().equals(TicketOfEternalKeep.ticketItem)) {
                 NbtComponent nbt = itemStack.get(DataComponentTypes.CUSTOM_DATA);
                 if (nbt != null && nbt.contains(TicketOfEternalKeep.nbtName)) {
                     // Use copyNbt() method instead of deprecated getNbt()
                     NbtCompound nbtCompound = nbt.copyNbt();
-                    return nbtCompound.getBoolean(TicketOfEternalKeep.nbtName);
+                    return nbtCompound.getBoolean(TicketOfEternalKeep.nbtName).orElse(false);
                 }
             }
         }
