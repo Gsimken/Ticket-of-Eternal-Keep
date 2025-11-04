@@ -29,12 +29,6 @@ loom {
 		}
 	}
 
-	runs {
-		client {
-			client()
-			property 'minecraft.client.username', 'playerdev'
-		}
-	}
 }
 
 dependencies {
