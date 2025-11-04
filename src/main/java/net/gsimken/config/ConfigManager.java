@@ -47,6 +47,8 @@ public class ConfigManager {
                     defaultProbabilities.put(LootTables.BASTION_HOGLIN_STABLE_CHEST.getValue().toString(), 0.15f);
                     defaultProbabilities.put(LootTables.BASTION_OTHER_CHEST.getValue().toString(), 0.15f);
                     defaultProbabilities.put(LootTables.BASTION_TREASURE_CHEST.getValue().toString(), 0.15f);
+                    // Nether Fortress (nether bridge)
+                    defaultProbabilities.put(LootTables.NETHER_BRIDGE_CHEST.getValue().toString(), 0.05f);
                     config.setLootTableProbabilities(defaultProbabilities);
                 }
                 if (config.getGenericChestProbability() == null) {
@@ -93,6 +95,8 @@ public class ConfigManager {
             defaultProbabilities.put(LootTables.BASTION_HOGLIN_STABLE_CHEST.getValue().toString(), 0.15f);
             defaultProbabilities.put(LootTables.BASTION_OTHER_CHEST.getValue().toString(), 0.15f);
             defaultProbabilities.put(LootTables.BASTION_TREASURE_CHEST.getValue().toString(), 0.15f);
+            // Nether Fortress (nether bridge)
+            defaultProbabilities.put(LootTables.NETHER_BRIDGE_CHEST.getValue().toString(), 0.05f);
             config.setLootTableProbabilities(defaultProbabilities);
             config.setGenericChestProbability(0.005f);
 
