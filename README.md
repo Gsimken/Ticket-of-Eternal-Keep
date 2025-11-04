@@ -4,21 +4,22 @@
 This Minecraft mod introduces a new item to the game: the "Ticket of Eternal Keeping". This special item allows players to keep their inventory items upon death. The ticket is consumed in the process, making it a valuable and strategic resource.
 
 ## Locations and Probabilities
-The "Ticket of Eternal Keeping" can be found in various structures within the game, each with different appearance probabilities:
+The "Ticket of Eternal Keeping" can be found in various structures within the game, each with different appearance probabilities (all configurable via the config file):
 
-| Structure       | Appearance Probability |
-|-----------------|------------------------|
-| Ancient City    | 10%                    |
-| Mineshaft       | 3%                     |
-| Stronghold      | 5%                     |
-| End Cities      | 5%                     |
-| Bastions        | 15%                    |
-| Villages        | 0.5%                   |
-| Ruined Portals  | 0.5%                   |
-| Shipwrecks      | 0.5%                   |
+| Structure       | Default Probability | Configurable |
+|-----------------|---------------------|--------------|
+| Ancient City    | 10%                 | ✅ Yes       |
+| Mineshaft       | 3%                  | ✅ Yes       |
+| Stronghold      | 5%                  | ✅ Yes       |
+| End Cities      | 5%                  | ✅ Yes       |
+| Bastions        | 15%                 | ✅ Yes       |
+| Other Chests    | 0.5%                | ✅ Yes       |
+
+**Note:** All probabilities can be customized in the `ToEK.json` config file. See the [Config](#config) section for details.
 
 ## Config
-the Toek item is configurable, the file is located in the folder .minecraft/config (or server_folder/config for servers) and is named ToEK.json
+The ToEK item is configurable, the file is located in the folder `.minecraft/config` (or `server_folder/config` for servers) and is named `ToEK.json`
+
 ```json
 {
   "item": "minecraft:paper",
@@ -29,18 +30,41 @@ the Toek item is configurable, the file is located in the folder .minecraft/conf
     "",
     "&4&lIt is consumed at death"
   ],
-  "CustomModelDataNumber": 506
+  "CustomModelDataNumber": 506,
+  "lootTableProbabilities": {
+    "minecraft:chests/ancient_city": 0.1,
+    "minecraft:chests/abandoned_mineshaft": 0.03,
+    "minecraft:chests/stronghold_library": 0.05,
+    "minecraft:chests/stronghold_corridor": 0.05,
+    "minecraft:chests/stronghold_crossing": 0.05,
+    "minecraft:chests/end_city_treasure": 0.05,
+    "minecraft:chests/bastion_bridge": 0.15,
+    "minecraft:chests/bastion_hoglin_stable": 0.15,
+    "minecraft:chests/bastion_other": 0.15,
+    "minecraft:chests/bastion_treasure": 0.15
+  },
+  "genericChestProbability": 0.005
 }
 ```
-In this file there are some configurable fields, it also accepts '&' for color codes.
 
-`item`: allows you to change the item that the game uses for the ticket; however, doing this removes the textures in the client, it is important to know that the chosen item can still be used for recipes and fulfill its functions, for example, choosing a block and using the right click can cause the object to be lost.
+### Configurable Fields
 
-`name`: change the name
+**Item Configuration:**
+- `item`: allows you to change the item that the game uses for the ticket; however, doing this removes the textures in the client, it is important to know that the chosen item can still be used for recipes and fulfill its functions, for example, choosing a block and using the right click can cause the object to be lost.
 
-`lore`: is the description of the item, it accepts as many lines as you like, just add a new one between the square brackets ('[')
+- `name`: change the name of the item. Accepts '&' for color codes (e.g., `&6` for gold, `&b` for aqua).
 
-`CustomModeDataNumber`: number used for custom texture pack, with this it is possible to force a texture pack from the server to the players so they can have a desired texture for the item.
+- `lore`: is the description of the item, it accepts as many lines as you like, just add a new one between the square brackets ('['). Also accepts '&' for color codes.
+
+- `CustomModelDataNumber`: number used for custom texture pack, with this it is possible to force a texture pack from the server to the players so they can have a desired texture for the item.
+
+**Loot Table Probabilities:**
+- `lootTableProbabilities`: A map that allows you to configure the probability of finding the ticket in specific loot tables. Values range from `0.0` (never) to `1.0` (always/100%).
+  - You can add or remove any loot table by its identifier (e.g., `"minecraft:chests/ancient_city"`)
+  - To disable a loot table, set its probability to `0.0` or remove it from the map
+  - The default probabilities are shown in the example above
+
+- `genericChestProbability`: The probability for the ticket to appear in any chest that doesn't have a specific entry in `lootTableProbabilities`. Set to `0.005` (0.5%) by default. Set to `0.0` to disable tickets in generic chests.
 
 
 ## Installation
@@ -59,8 +83,8 @@ The development team of the "Ticket of Eternal Keeping" mod is continuously work
 -  ~~**Textures for Clients with the Mod Installed**: The team is looking into allowing clients with the mod installed to see a unique texture for the "Ticket of Eternal Keeping".~~
 - ~~**Item Configurability**: Plans are in place to make the item used for the "Ticket of Eternal Keeping" configurable, allowing server administrators or players to customize the specific item to be used.~~
 - ~~**Customization of Name and Description**: Future versions aim to enable the customization of the item's name and description through configuration files.~~
+- ~~**Adjustable Locations and Probabilities**: Features that allow the adjustment of locations and probabilities for finding the "Ticket of Eternal Keeping" in various game structures are intended to be implemented.~~
 - **Configurable Crafting**: An option to enable or disable the crafting of the item within the game is planned.
-- **Adjustable Locations and Probabilities**: Features that allow the adjustment of locations and probabilities for finding the "Ticket of Eternal Keeping" in various game structures are intended to be implemented.
 
 Contributions are always welcome. If you have ideas or want to contribute to the code, feel free to fork the repository and submit your pull requests.
 

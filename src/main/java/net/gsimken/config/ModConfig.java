@@ -1,12 +1,15 @@
 package net.gsimken.config;
 
 import java.util.List;
+import java.util.Map;
 
 public class ModConfig {
     private String item;
     private String name;
     private List<String> lore;
     private int CustomModelDataNumber;
+    private Map<String, Float> lootTableProbabilities;
+    private Float genericChestProbability;
 
     // Getters y setters
 
@@ -40,6 +43,22 @@ public class ModConfig {
 
     public void setCustomModelDataNumber(int customModelDataNumber) {
         CustomModelDataNumber = customModelDataNumber;
+    }
+
+    public Map<String, Float> getLootTableProbabilities() {
+        return lootTableProbabilities;
+    }
+
+    public void setLootTableProbabilities(Map<String, Float> lootTableProbabilities) {
+        this.lootTableProbabilities = lootTableProbabilities;
+    }
+
+    public Float getGenericChestProbability() {
+        return genericChestProbability;
+    }
+
+    public void setGenericChestProbability(Float genericChestProbability) {
+        this.genericChestProbability = genericChestProbability;
     }
 
     public String printConfig(){
