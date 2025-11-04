@@ -37,7 +37,7 @@ public class ConfigManager {
                 // Validar y aplicar valores por defecto si faltan
                 if (config.getLootTableProbabilities() == null) {
                     Map<String, Float> defaultProbabilities = new HashMap<>();
-                    defaultProbabilities.put(LootTables.ANCIENT_CITY_CHEST.getValue().toString(), 0.10f);
+                    defaultProbabilities.put(LootTables.ANCIENT_CITY_CHEST.getValue().toString(), 0.1f);
                     defaultProbabilities.put(LootTables.ABANDONED_MINESHAFT_CHEST.getValue().toString(), 0.03f);
                     defaultProbabilities.put(LootTables.STRONGHOLD_LIBRARY_CHEST.getValue().toString(), 0.05f);
                     defaultProbabilities.put(LootTables.STRONGHOLD_CORRIDOR_CHEST.getValue().toString(), 0.05f);
