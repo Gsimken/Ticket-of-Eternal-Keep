@@ -23,10 +23,10 @@ public class TicketUtils {
             ItemStack itemStack = player.getInventory().getStack(i);
             if (itemStack.getItem().equals(TicketOfEternalKeep.ticketItem)) {
                 NbtComponent nbt = itemStack.get(DataComponentTypes.CUSTOM_DATA);
-                if (nbt != null && nbt.contains(TicketOfEternalKeep.nbtName)) {
+                if (nbt != null) {
                     // Use copyNbt() method instead of deprecated getNbt()
                     NbtCompound nbtCompound = nbt.copyNbt();
-                    if (nbtCompound.getBoolean(TicketOfEternalKeep.nbtName).orElse(false)) {
+                    if (nbtCompound.contains(TicketOfEternalKeep.nbtName) && nbtCompound.getBoolean(TicketOfEternalKeep.nbtName).orElse(false)) {
                         itemStack.decrement(1);
                         break;
                     }
@@ -35,8 +35,8 @@ public class TicketUtils {
         }
     }
 
-    public static void applyVanishCurse(ServerPlayerEntity player) {
-        if(player == null || player.isInCreativeMode()){
+    public static void applyVanishCurse(ServerPlayerEntity player, boolean isInCreativeMode) {
+        if(isInCreativeMode){
             return;
         }
         String vanishCurse = Enchantments.VANISHING_CURSE.getValue().toString();
@@ -55,10 +55,12 @@ public class TicketUtils {
             ItemStack itemStack = player.getInventory().getStack(i);
             if (itemStack.getItem().equals(TicketOfEternalKeep.ticketItem)) {
                 NbtComponent nbt = itemStack.get(DataComponentTypes.CUSTOM_DATA);
-                if (nbt != null && nbt.contains(TicketOfEternalKeep.nbtName)) {
+                if (nbt != null) {
                     // Use copyNbt() method instead of deprecated getNbt()
                     NbtCompound nbtCompound = nbt.copyNbt();
-                    return nbtCompound.getBoolean(TicketOfEternalKeep.nbtName).orElse(false);
+                    if (nbtCompound.contains(TicketOfEternalKeep.nbtName)) {
+                        return nbtCompound.getBoolean(TicketOfEternalKeep.nbtName).orElse(false);
+                    }
                 }
             }
         }

@@ -20,7 +20,7 @@ public class ServerPlayerEntityMixin {
 			player.experienceLevel = oldPlayer.experienceLevel;
 			player.totalExperience = oldPlayer.totalExperience;
 			TicketUtils.consumeTicket(player);
-			TicketUtils.applyVanishCurse(player);
+			TicketUtils.applyVanishCurse(player, oldPlayer.isInCreativeMode());
 		}
 	}
 

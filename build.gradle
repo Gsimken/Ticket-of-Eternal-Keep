@@ -29,6 +29,15 @@ loom {
 		}
 	}
 
+	// Configuración para debugging
+	runs {
+		client {
+			client()
+			ideConfigGenerated = true
+			runDir = "run"
+			vmArgs.add("-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5006")
+		}
+	}
 }
 
 dependencies {
