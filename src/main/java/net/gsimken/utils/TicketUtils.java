@@ -35,8 +35,8 @@ public class TicketUtils {
         }
     }
 
-    public static void applyVanishCurse(ServerPlayerEntity player, ServerPlayerEntity oldPlayer) {
-        if(oldPlayer == null || oldPlayer.isInCreativeMode()){
+    public static void applyVanishCurse(ServerPlayerEntity player, boolean isInCreativeMode) {
+        if(isInCreativeMode){
             return;
         }
         String vanishCurse = Enchantments.VANISHING_CURSE.getValue().toString();
