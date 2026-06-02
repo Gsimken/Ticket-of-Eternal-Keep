@@ -9,7 +9,9 @@ public class ModConfig {
     private List<String> lore;
     private int CustomModelDataNumber;
     private Map<String, Float> lootTableProbabilities;
+    private Map<String, Float> mobLootTableProbabilities;
     private Float genericChestProbability;
+    private Float genericMobProbability;
 
     // Getters y setters
 
@@ -53,12 +55,28 @@ public class ModConfig {
         this.lootTableProbabilities = lootTableProbabilities;
     }
 
+    public Map<String, Float> getMobLootTableProbabilities() {
+        return mobLootTableProbabilities;
+    }
+
+    public void setMobLootTableProbabilities(Map<String, Float> mobLootTableProbabilities) {
+        this.mobLootTableProbabilities = mobLootTableProbabilities;
+    }
+
     public Float getGenericChestProbability() {
         return genericChestProbability;
     }
 
     public void setGenericChestProbability(Float genericChestProbability) {
         this.genericChestProbability = genericChestProbability;
+    }
+
+    public Float getGenericMobProbability() {
+        return genericMobProbability;
+    }
+
+    public void setGenericMobProbability(Float genericMobProbability) {
+        this.genericMobProbability = genericMobProbability;
     }
 
     public String printConfig(){
