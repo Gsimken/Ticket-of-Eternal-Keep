@@ -11,6 +11,11 @@ permissions:
 jobs:
   release:
     runs-on: ubuntu-22.04
+    env:
+      MODRINTH_ID: ${{ vars.MODRINTH_ID }}
+      MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
+      CURSEFORGE_ID: ${{ vars.CURSEFORGE_ID }}
+      CURSEFORGE_TOKEN: ${{ secrets.CURSEFORGE_TOKEN }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -28,11 +33,71 @@ jobs:
       - name: Make gradlew executable
         run: chmod +x ./gradlew
 
+      - name: Derive versions
+        id: versions
+        run: |
+          MOD_VERSION=$(grep '^mod_version=' gradle.properties | cut -d'=' -f2)
+          echo "mod_version=$MOD_VERSION" >> "$GITHUB_OUTPUT"
+          echo "jar_file=build/libs/ticket-of-eternal-keep-$MOD_VERSION.jar" >> "$GITHUB_OUTPUT"
+          echo "release_notes=build/release-notes.md" >> "$GITHUB_OUTPUT"
+
       - name: Build
         run: ./gradlew build --no-daemon
+
+      - name: Prepare release notes
+        run: |
+          NOTES_FILE=".github/release-notes/${{ steps.versions.outputs.mod_version }}.md"
+          if [ -f "$NOTES_FILE" ]; then
+            cp "$NOTES_FILE" "${{ steps.versions.outputs.release_notes }}"
+          else
+            {
+              echo "# Ticket of Eternal Keep ${{ steps.versions.outputs.mod_version }}"
+              echo
+              echo "Release build for ${{ github.ref_name }}."
+            } > "${{ steps.versions.outputs.release_notes }}"
+          fi
 
       - name: Create GitHub release
         uses: softprops/action-gh-release@v2
         with:
           name: ${{ github.ref_name }}
+          body_path: ${{ steps.versions.outputs.release_notes }}
           files: build/libs/*.jar
+
+      - name: Publish to Modrinth
+        if: env.MODRINTH_ID != '' && env.MODRINTH_TOKEN != ''
+        uses: Kir-Antipov/mc-publish@v3.3
+        with:
+          modrinth-id: ${{ env.MODRINTH_ID }}
+          modrinth-token: ${{ env.MODRINTH_TOKEN }}
+          files: ${{ steps.versions.outputs.jar_file }}
+          name: Ticket of Eternal Keep ${{ steps.versions.outputs.mod_version }}
+          version: ${{ steps.versions.outputs.mod_version }}
+          version-type: release
+          changelog-file: ${{ steps.versions.outputs.release_notes }}
+          loaders: fabric
+          game-versions: |
+            1.21.9
+            1.21.10
+          java: 21
+          dependencies: |
+            fabric-api(required)
+
+      - name: Publish to CurseForge
+        if: env.CURSEFORGE_ID != '' && env.CURSEFORGE_TOKEN != ''
+        uses: Kir-Antipov/mc-publish@v3.3
+        with:
+          curseforge-id: ${{ env.CURSEFORGE_ID }}
+          curseforge-token: ${{ env.CURSEFORGE_TOKEN }}
+          files: ${{ steps.versions.outputs.jar_file }}
+          name: Ticket of Eternal Keep ${{ steps.versions.outputs.mod_version }}
+          version: ${{ steps.versions.outputs.mod_version }}
+          version-type: release
+          changelog-file: ${{ steps.versions.outputs.release_notes }}
+          loaders: fabric
+          game-versions: |
+            1.21.9
+            1.21.10
+          java: 21
+          dependencies: |
+            fabric-api(required)
