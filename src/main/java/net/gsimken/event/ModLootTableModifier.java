@@ -21,23 +21,28 @@ public class ModLootTableModifier {
         LootTableEvents.MODIFY.register((key, tableBuilder, source, registries) -> {
             Identifier id = key.getValue();
             String idString = id.toString();
-            
-            // Obtener probabilidades desde la configuración
+
             Map<String, Float> probabilities = TicketOfEternalKeep.configManager.getConfig().getLootTableProbabilities();
+            Map<String, Float> mobProbabilities = TicketOfEternalKeep.configManager.getConfig().getMobLootTableProbabilities();
             Float genericProbability = TicketOfEternalKeep.configManager.getConfig().getGenericChestProbability();
-            
-            // Verificar si esta loot table tiene una probabilidad configurada
+            Float genericMobProbability = TicketOfEternalKeep.configManager.getConfig().getGenericMobProbability();
+
             if (probabilities != null && probabilities.containsKey(idString)) {
-                Float probability = probabilities.get(idString);
-                if (probability != null && probability > 0.0f) {
-                    tableBuilder.pool(addTicketToPool(TicketUtils.createTicket(), probability));
-                }
-            }
-            // Agregar probabilidad genérica a otros cofres si está configurada
-            else if (id.getPath().startsWith("chests/") && genericProbability != null && genericProbability > 0.0f) {
-                tableBuilder.pool(addTicketToPool(TicketUtils.createTicket(), genericProbability));
+                addConfiguredTicketPool(tableBuilder, probabilities.get(idString));
+            } else if (mobProbabilities != null && mobProbabilities.containsKey(idString)) {
+                addConfiguredTicketPool(tableBuilder, mobProbabilities.get(idString));
+            } else if (id.getPath().startsWith("chests/")) {
+                addConfiguredTicketPool(tableBuilder, genericProbability);
+            } else if (id.getPath().startsWith("entities/")) {
+                addConfiguredTicketPool(tableBuilder, genericMobProbability);
             }
         });
+    }
+
+    private static void addConfiguredTicketPool(net.minecraft.loot.LootTable.Builder tableBuilder, Float probability) {
+        if (probability != null && probability > 0.0f) {
+            tableBuilder.pool(addTicketToPool(TicketUtils.createTicket(), probability));
+        }
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
@@ -50,11 +55,8 @@ public class ModLootTableModifier {
                         component.value()
                 )
         ));
-        entryBuilder.conditionally(RandomChanceLootCondition.builder(probability));
         return LootPool.builder()
                 .rolls(ConstantLootNumberProvider.create(1))
                 .with(entryBuilder);
     }
 }
-
-

@@ -10,6 +10,11 @@ base {
 	archivesName = project.archives_base_name
 }
 
+def toekDebugDrops = providers.gradleProperty("toek_debug_drops")
+		.map { it.toBoolean() }
+		.orElse(false)
+		.get()
+
 repositories {
 	// Add repositories to retrieve artifacts from in here.
 	// You should only use this when depending on other mods because
@@ -35,7 +40,15 @@ loom {
 			client()
 			ideConfigGenerated = true
 			runDir = "run"
+			vmArgs.add("-Dtoek.debugDrops=${toekDebugDrops}")
 			vmArgs.add("-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5006")
+		}
+
+		server {
+			server()
+			ideConfigGenerated = true
+			runDir = "run-server"
+			vmArgs.add("-Dtoek.debugDrops=${toekDebugDrops}")
 		}
 	}
 }
