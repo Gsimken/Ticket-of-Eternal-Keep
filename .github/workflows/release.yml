@@ -62,6 +62,7 @@ jobs:
         with:
           name: ${{ github.ref_name }}
           body_path: ${{ steps.versions.outputs.release_notes }}
+          overwrite_files: true
           files: build/libs/*.jar
 
       - name: Publish to Modrinth
