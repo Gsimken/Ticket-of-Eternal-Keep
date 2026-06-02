@@ -77,12 +77,12 @@ jobs:
           overwrite_files: true
           files: build/libs/*.jar
 
-      - name: Publish to Modrinth
-        if: env.MODRINTH_ID != '' && env.MODRINTH_TOKEN != ''
+      - name: Publish to CurseForge
+        if: env.CURSEFORGE_ID != '' && env.CURSEFORGE_TOKEN != ''
         uses: Kir-Antipov/mc-publish@v3.3
         with:
-          modrinth-id: ${{ env.MODRINTH_ID }}
-          modrinth-token: ${{ env.MODRINTH_TOKEN }}
+          curseforge-id: ${{ env.CURSEFORGE_ID }}
+          curseforge-token: ${{ env.CURSEFORGE_TOKEN }}
           files: ${{ steps.versions.outputs.jar_file }}
           name: Ticket of Eternal Keep ${{ steps.versions.outputs.mod_version }}
           version: ${{ steps.versions.outputs.mod_version }}
@@ -96,12 +96,12 @@ jobs:
           dependencies: |
             fabric-api(required)
 
-      - name: Publish to CurseForge
-        if: env.CURSEFORGE_ID != '' && env.CURSEFORGE_TOKEN != ''
+      - name: Publish to Modrinth
+        if: env.MODRINTH_ID != '' && env.MODRINTH_TOKEN != ''
         uses: Kir-Antipov/mc-publish@v3.3
         with:
-          curseforge-id: ${{ env.CURSEFORGE_ID }}
-          curseforge-token: ${{ env.CURSEFORGE_TOKEN }}
+          modrinth-id: ${{ env.MODRINTH_ID }}
+          modrinth-token: ${{ env.MODRINTH_TOKEN }}
           files: ${{ steps.versions.outputs.jar_file }}
           name: Ticket of Eternal Keep ${{ steps.versions.outputs.mod_version }}
           version: ${{ steps.versions.outputs.mod_version }}
