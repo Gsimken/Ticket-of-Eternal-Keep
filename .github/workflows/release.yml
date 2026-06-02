@@ -56,6 +56,18 @@ jobs:
               echo "Release build for ${{ github.ref_name }}."
             } > "${{ steps.versions.outputs.release_notes }}"
           fi
+          PREVIOUS_TAG=$(git tag --sort=-creatordate | grep -v "^${{ github.ref_name }}$" | head -n 1 || true)
+          {
+            echo
+            echo "## Commits Included"
+            echo
+            if [ -n "$PREVIOUS_TAG" ]; then
+              git log --pretty=format:'- %s (%h)' "$PREVIOUS_TAG..HEAD"
+            else
+              git log --pretty=format:'- %s (%h)'
+            fi
+            echo
+          } >> "${{ steps.versions.outputs.release_notes }}"
 
       - name: Create GitHub release
         uses: softprops/action-gh-release@v2
