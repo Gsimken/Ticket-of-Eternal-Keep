@@ -2,6 +2,7 @@ package net.gsimken.commands;
 
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
+import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import me.lucko.fabric.api.permissions.v0.Permissions;
 import net.gsimken.utils.TicketUtils;
@@ -16,13 +17,24 @@ import net.minecraft.text.Text;
 
 public class GetTicketCommand {
     public static void register(CommandDispatcher<ServerCommandSource> dispatcher, CommandRegistryAccess commandRegistryAccess, CommandManager.RegistrationEnvironment registrationEnvironment) {
-        dispatcher.register(CommandManager.literal("getticket")
-                .requires((source) -> Permissions.check(source, "toek.command.getticket") || hasOpLevelTwo(source))
-                .executes(context -> getTicket(context.getSource(), null)) // Sin argumento, da el ítem al ejecutor
+        dispatcher.register(CommandManager.literal("toek")
+                .then(ticketGiveCommand("give")));
+
+        dispatcher.register(ticketGiveCommand("getticket"));
+    }
+
+    private static LiteralArgumentBuilder<ServerCommandSource> ticketGiveCommand(String commandName) {
+        return CommandManager.literal(commandName)
+                .requires(GetTicketCommand::canGiveTicket)
+                .executes(context -> getTicket(context.getSource(), null))
                 .then(CommandManager.argument("playerName", StringArgumentType.string())
-                        .executes(context -> getTicket(context.getSource(), StringArgumentType.getString(context, "playerName")))
-                )
-        );
+                        .executes(context -> getTicket(context.getSource(), StringArgumentType.getString(context, "playerName"))));
+    }
+
+    private static boolean canGiveTicket(ServerCommandSource source) {
+        return Permissions.check(source, "toek.command.give")
+                || Permissions.check(source, "toek.command.getticket")
+                || hasOpLevelTwo(source);
     }
 
     private static boolean hasOpLevelTwo(ServerCommandSource source) {

@@ -7,16 +7,17 @@ Run this checklist for every migrated Minecraft version before publishing the ja
 1. Build the mod with `.\gradlew.bat clean build`.
 2. Start a development client with `.\gradlew.bat runClient`.
 3. Create a new creative test world with cheats enabled.
-4. Run `/getticket` and confirm a Ticket of Eternal Keeping appears.
+4. Run `/toek give` and confirm a Ticket of Eternal Keeping appears.
 5. Open `.minecraft/config/ToEK.json` or `run/config/ToEK.json` and keep it available for edits.
 
 ## Command And Item Identity
 
-1. Run `/getticket`.
+1. Run `/toek give`.
 2. Confirm the command succeeds for an operator.
 3. Confirm the item name uses gold formatting.
 4. Confirm the lore appears on multiple lines.
 5. Confirm the item uses the configured base item, defaulting to paper.
+6. Run `/getticket` and confirm the legacy alias still gives a ticket.
 
 ## Inventory Keep Behavior
 
