@@ -50,9 +50,11 @@ Run this checklist for every migrated Minecraft version before publishing the ja
 2. Restart the client/server.
 3. Confirm the config file is recreated with default probabilities.
 4. Change `name`, `lore`, and `CustomModelDataNumber`.
-5. Restart and confirm the generated ticket reflects those values.
-6. Remove `genericChestProbability` and `genericMobProbability` from the config.
-7. Restart and confirm they are restored with defaults.
+5. Run `/toek reload`.
+6. Confirm the next generated ticket reflects those values without restarting.
+7. Remove `genericChestProbability` and `genericMobProbability` from the config.
+8. Run `/toek reload`.
+9. Confirm they are restored with defaults.
 
 ## Loot Drops
 

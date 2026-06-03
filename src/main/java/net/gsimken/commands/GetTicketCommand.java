@@ -5,6 +5,7 @@ import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import me.lucko.fabric.api.permissions.v0.Permissions;
+import net.gsimken.TicketOfEternalKeep;
 import net.gsimken.utils.TicketUtils;
 import net.minecraft.command.CommandRegistryAccess;
 import net.minecraft.command.permission.Permission;
@@ -18,7 +19,10 @@ import net.minecraft.text.Text;
 public class GetTicketCommand {
     public static void register(CommandDispatcher<ServerCommandSource> dispatcher, CommandRegistryAccess commandRegistryAccess, CommandManager.RegistrationEnvironment registrationEnvironment) {
         dispatcher.register(CommandManager.literal("toek")
-                .then(ticketGiveCommand("give")));
+                .then(ticketGiveCommand("give"))
+                .then(CommandManager.literal("reload")
+                        .requires(GetTicketCommand::canReload)
+                        .executes(context -> reloadConfig(context.getSource()))));
 
         dispatcher.register(ticketGiveCommand("getticket"));
     }
@@ -35,6 +39,10 @@ public class GetTicketCommand {
         return Permissions.check(source, "toek.command.give")
                 || Permissions.check(source, "toek.command.getticket")
                 || hasOpLevelTwo(source);
+    }
+
+    private static boolean canReload(ServerCommandSource source) {
+        return Permissions.check(source, "toek.command.reload") || hasOpLevelTwo(source);
     }
 
     private static boolean hasOpLevelTwo(ServerCommandSource source) {
@@ -60,6 +68,12 @@ public class GetTicketCommand {
         }
 
         source.sendFeedback(() -> Text.translatable("command.ticket_of_eternal_keep.give_successfully"), true);
+        return 1;
+    }
+
+    private static int reloadConfig(ServerCommandSource source) {
+        TicketOfEternalKeep.configManager.loadConfig();
+        source.sendFeedback(() -> Text.translatable("command.ticket_of_eternal_keep.reload_successfully"), true);
         return 1;
     }
 }

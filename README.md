@@ -94,6 +94,8 @@ ToEK has a command that allows an operator, or whoever has the `toek.command.giv
 
 For compatibility with existing servers, `/getticket` and `/getticket playerName` are still available as legacy aliases. The old `toek.command.getticket` permission is also accepted.
 
+The config can be reloaded without restarting the client or server using `/toek reload`. This command requires operator level 2 or the `toek.command.reload` permission.
+
 ## Future Work
 The development team of the "Ticket of Eternal Keeping" mod is continuously working on improvements and expansions. The roadmap for future updates includes:
 
