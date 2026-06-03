@@ -22,31 +22,26 @@ import java.util.stream.Collectors;
 
 public class ConfigManager {
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
-    private static final Path CONFIG_PATH = Paths.get(FabricLoader.getInstance().getGameDir().toFile().getPath() + "/config/ToEK.json");
     private static final String DEBUG_DROPS_PROPERTY = "toek.debugDrops";
     private ModConfig config;
 
     public void loadConfig() {
         try {
-            createConfigDirectoryIfNeeded();
-            if (!Files.exists(CONFIG_PATH)) {
+            Path configPath = configPath();
+            createConfigDirectoryIfNeeded(configPath);
+            if (!Files.exists(configPath)) {
                 saveDefaultConfig();
             }
-            try (FileReader reader = new FileReader(CONFIG_PATH.toFile())) {
+            try (FileReader reader = new FileReader(configPath.toFile())) {
                 config = GSON.fromJson(reader, ModConfig.class);
             }
 
-            boolean configUpdated = applyMissingDefaults();
+            boolean configUpdated = applyMissingDefaults(config);
             if (configUpdated) {
                 saveConfigFile();
             }
             applyDebugDropsIfEnabled();
-
-            config.setName(replaceFormatSymbols(config.getName()));
-            List<String> updatedLore = config.getLore().stream()
-                    .map(this::replaceFormatSymbols)
-                    .collect(Collectors.toList());
-            config.setLore(updatedLore);
+            applyFormatting(config);
 
             try {
                 Identifier itemId = Identifier.of(config.getItem());
@@ -61,16 +56,8 @@ public class ConfigManager {
 
     private void saveDefaultConfig() {
         try {
-            createConfigDirectoryIfNeeded();
-            config = new ModConfig();
-            config.setItem("minecraft:paper");
-            config.setName("&6Ticket of Eternal Keeping");
-            config.setLore(List.of("&bThis ticket allows whoever carries it", "&bin the inventory to keep their items when they die.", "", "&4&lIt is consumed at death"));
-            config.setCustomModelDataNumber(506);
-            config.setLootTableProbabilities(defaultChestLootTableProbabilities());
-            config.setMobLootTableProbabilities(defaultMobLootTableProbabilities());
-            config.setGenericChestProbability(0.005f);
-            config.setGenericMobProbability(0.0f);
+            createConfigDirectoryIfNeeded(configPath());
+            config = createDefaultConfig();
             saveConfigFile();
         } catch (IOException e) {
             e.printStackTrace();
@@ -81,7 +68,20 @@ public class ConfigManager {
         return config;
     }
 
-    private boolean applyMissingDefaults() {
+    static ModConfig createDefaultConfig() {
+        ModConfig config = new ModConfig();
+        config.setItem("minecraft:paper");
+        config.setName("&6Ticket of Eternal Keeping");
+        config.setLore(List.of("&bThis ticket allows whoever carries it", "&bin the inventory to keep their items when they die.", "", "&4&lIt is consumed at death"));
+        config.setCustomModelDataNumber(506);
+        config.setLootTableProbabilities(defaultChestLootTableProbabilities());
+        config.setMobLootTableProbabilities(defaultMobLootTableProbabilities());
+        config.setGenericChestProbability(0.005f);
+        config.setGenericMobProbability(0.0f);
+        return config;
+    }
+
+    static boolean applyMissingDefaults(ModConfig config) {
         boolean configUpdated = false;
         if (config.getLootTableProbabilities() == null) {
             config.setLootTableProbabilities(defaultChestLootTableProbabilities());
@@ -102,6 +102,14 @@ public class ConfigManager {
         return configUpdated;
     }
 
+    static void applyFormatting(ModConfig config) {
+        config.setName(replaceFormatSymbols(config.getName()));
+        List<String> updatedLore = config.getLore().stream()
+                .map(ConfigManager::replaceFormatSymbols)
+                .collect(Collectors.toList());
+        config.setLore(updatedLore);
+    }
+
     private void applyDebugDropsIfEnabled() {
         if (!Boolean.getBoolean(DEBUG_DROPS_PROPERTY)) {
             return;
@@ -111,26 +119,30 @@ public class ConfigManager {
         TicketOfEternalKeep.LOGGER.warn("ToEK debug drops enabled: ancient_city chests and zombies drop tickets at 100%.");
     }
 
-    private String replaceFormatSymbols(String text) {
+    private static String replaceFormatSymbols(String text) {
         return text.replace("&", "\u00A7");
     }
 
-    private void createConfigDirectoryIfNeeded() throws IOException {
-        Path configDir = CONFIG_PATH.getParent();
+    private Path configPath() {
+        return Paths.get(FabricLoader.getInstance().getGameDir().toFile().getPath() + "/config/ToEK.json");
+    }
+
+    private void createConfigDirectoryIfNeeded(Path configPath) throws IOException {
+        Path configDir = configPath.getParent();
         if (!Files.exists(configDir)) {
             Files.createDirectories(configDir);
         }
     }
 
     private void saveConfigFile() {
-        try (FileWriter writer = new FileWriter(CONFIG_PATH.toFile())) {
+        try (FileWriter writer = new FileWriter(configPath().toFile())) {
             GSON.toJson(config, writer);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    private Map<String, Float> defaultChestLootTableProbabilities() {
+    private static Map<String, Float> defaultChestLootTableProbabilities() {
         Map<String, Float> defaultProbabilities = new HashMap<>();
         defaultProbabilities.put(LootTables.ANCIENT_CITY_CHEST.getValue().toString(), 0.1f);
         defaultProbabilities.put(LootTables.ABANDONED_MINESHAFT_CHEST.getValue().toString(), 0.03f);
@@ -146,7 +158,7 @@ public class ConfigManager {
         return defaultProbabilities;
     }
 
-    private Map<String, Float> defaultMobLootTableProbabilities() {
+    private static Map<String, Float> defaultMobLootTableProbabilities() {
         Map<String, Float> defaultProbabilities = new HashMap<>();
         defaultProbabilities.put("minecraft:entities/zombie", 0.0f);
         defaultProbabilities.put("minecraft:entities/skeleton", 0.0f);
