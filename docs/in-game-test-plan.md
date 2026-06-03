@@ -17,7 +17,9 @@ Run this checklist for every migrated Minecraft version before publishing the ja
 3. Confirm the item name uses gold formatting.
 4. Confirm the lore appears on multiple lines.
 5. Confirm the item uses the configured base item, defaulting to paper.
-6. Run `/getticket` and confirm the legacy alias still gives a ticket.
+6. Run `/toek give @p` and confirm the nearest player receives a ticket.
+7. Run `/toek give @a` in a multiplayer or LAN test and confirm all players receive a ticket.
+8. Run `/getticket @p` and confirm the legacy alias still accepts vanilla selectors.
 
 ## Inventory Keep Behavior
 
