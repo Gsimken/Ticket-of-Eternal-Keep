@@ -6,6 +6,8 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import me.lucko.fabric.api.permissions.v0.Permissions;
 import net.gsimken.utils.TicketUtils;
 import net.minecraft.command.CommandRegistryAccess;
+import net.minecraft.command.permission.Permission;
+import net.minecraft.command.permission.PermissionLevel;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
@@ -15,12 +17,16 @@ import net.minecraft.text.Text;
 public class GetTicketCommand {
     public static void register(CommandDispatcher<ServerCommandSource> dispatcher, CommandRegistryAccess commandRegistryAccess, CommandManager.RegistrationEnvironment registrationEnvironment) {
         dispatcher.register(CommandManager.literal("getticket")
-                .requires((source) -> (Permissions.check(source ,"toek.command.getticket")) || source.hasPermissionLevel(2))
+                .requires((source) -> Permissions.check(source, "toek.command.getticket") || hasOpLevelTwo(source))
                 .executes(context -> getTicket(context.getSource(), null)) // Sin argumento, da el ítem al ejecutor
                 .then(CommandManager.argument("playerName", StringArgumentType.string())
                         .executes(context -> getTicket(context.getSource(), StringArgumentType.getString(context, "playerName")))
                 )
         );
+    }
+
+    private static boolean hasOpLevelTwo(ServerCommandSource source) {
+        return source.getPermissions().hasPermission(new Permission.Level(PermissionLevel.GAMEMASTERS));
     }
 
     private static int getTicket(ServerCommandSource source, String playerName) throws CommandSyntaxException {
