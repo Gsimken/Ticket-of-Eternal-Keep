@@ -90,7 +90,11 @@ This mod is designed to work on the server side. It provides a convenient soluti
 In case you want users to have the texture, you can use the texture pack from the following [release](https://github.com/Gsimken/Ticket-of-Eternal-Keep/releases/tag/V1.1.0) on the server.
 
 ## Commands
-ToEK has a command that allows an operator, or whoever has the `toek.command.getticket` permission, to generate a ticket at will. This ticket can be given to the player who invokes the command using `/getticket` or to another player using `/getticket playerName`.
+ToEK has a command that allows an operator, or whoever has the `toek.command.give` permission, to generate a ticket at will. This ticket can be given to the player who invokes the command using `/toek give`, or to one or more players using `/toek give <players>`. The player argument accepts vanilla selectors such as `@a`, `@p`, and player names.
+
+For compatibility with existing servers, `/getticket` and `/getticket <players>` are still available as legacy aliases. The old `toek.command.getticket` permission is also accepted.
+
+The config can be reloaded without restarting the client or server using `/toek reload`. This command requires operator level 2 or the `toek.command.reload` permission.
 
 ## Future Work
 The development team of the "Ticket of Eternal Keeping" mod is continuously working on improvements and expansions. The roadmap for future updates includes:

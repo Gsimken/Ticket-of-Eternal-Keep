@@ -1,3 +1,4 @@
 {
-  "command.ticket_of_eternal_keep.give_successfully": "Item given"
+  "command.ticket_of_eternal_keep.give_successfully": "Item given",
+  "command.ticket_of_eternal_keep.reload_successfully": "ToEK config reloaded"
 }
