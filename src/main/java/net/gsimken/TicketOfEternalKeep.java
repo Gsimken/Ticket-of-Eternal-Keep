@@ -6,8 +6,8 @@ import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.gsimken.commands.GetTicketCommand;
 import net.gsimken.config.ConfigManager;
 import net.gsimken.event.ModLootTableModifier;
-import net.minecraft.item.Item;
-import net.minecraft.item.Items;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

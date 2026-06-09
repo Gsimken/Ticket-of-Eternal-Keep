@@ -4,10 +4,10 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import net.fabricmc.loader.api.FabricLoader;
 import net.gsimken.TicketOfEternalKeep;
-import net.minecraft.item.Items;
-import net.minecraft.loot.LootTables;
-import net.minecraft.registry.Registries;
-import net.minecraft.util.Identifier;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.Identifier;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.storage.loot.BuiltInLootTables;
 
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -44,8 +44,8 @@ public class ConfigManager {
             applyFormatting(config);
 
             try {
-                Identifier itemId = Identifier.of(config.getItem());
-                TicketOfEternalKeep.ticketItem = Registries.ITEM.get(itemId);
+                Identifier itemId = Identifier.parse(config.getItem());
+                TicketOfEternalKeep.ticketItem = BuiltInRegistries.ITEM.getValue(itemId);
             } catch (Error e) {
                 TicketOfEternalKeep.ticketItem = Items.PAPER;
             }
@@ -114,7 +114,7 @@ public class ConfigManager {
         if (!Boolean.getBoolean(DEBUG_DROPS_PROPERTY)) {
             return;
         }
-        config.getLootTableProbabilities().put(LootTables.ANCIENT_CITY_CHEST.getValue().toString(), 1.0f);
+        config.getLootTableProbabilities().put(BuiltInLootTables.ANCIENT_CITY.identifier().toString(), 1.0f);
         config.getMobLootTableProbabilities().put("minecraft:entities/zombie", 1.0f);
         TicketOfEternalKeep.LOGGER.warn("ToEK debug drops enabled: ancient_city chests and zombies drop tickets at 100%.");
     }
@@ -144,17 +144,17 @@ public class ConfigManager {
 
     private static Map<String, Float> defaultChestLootTableProbabilities() {
         Map<String, Float> defaultProbabilities = new HashMap<>();
-        defaultProbabilities.put(LootTables.ANCIENT_CITY_CHEST.getValue().toString(), 0.1f);
-        defaultProbabilities.put(LootTables.ABANDONED_MINESHAFT_CHEST.getValue().toString(), 0.03f);
-        defaultProbabilities.put(LootTables.STRONGHOLD_LIBRARY_CHEST.getValue().toString(), 0.05f);
-        defaultProbabilities.put(LootTables.STRONGHOLD_CORRIDOR_CHEST.getValue().toString(), 0.05f);
-        defaultProbabilities.put(LootTables.STRONGHOLD_CROSSING_CHEST.getValue().toString(), 0.05f);
-        defaultProbabilities.put(LootTables.END_CITY_TREASURE_CHEST.getValue().toString(), 0.05f);
-        defaultProbabilities.put(LootTables.BASTION_BRIDGE_CHEST.getValue().toString(), 0.15f);
-        defaultProbabilities.put(LootTables.BASTION_HOGLIN_STABLE_CHEST.getValue().toString(), 0.15f);
-        defaultProbabilities.put(LootTables.BASTION_OTHER_CHEST.getValue().toString(), 0.15f);
-        defaultProbabilities.put(LootTables.BASTION_TREASURE_CHEST.getValue().toString(), 0.15f);
-        defaultProbabilities.put(LootTables.NETHER_BRIDGE_CHEST.getValue().toString(), 0.05f);
+        defaultProbabilities.put(BuiltInLootTables.ANCIENT_CITY.identifier().toString(), 0.1f);
+        defaultProbabilities.put(BuiltInLootTables.ABANDONED_MINESHAFT.identifier().toString(), 0.03f);
+        defaultProbabilities.put(BuiltInLootTables.STRONGHOLD_LIBRARY.identifier().toString(), 0.05f);
+        defaultProbabilities.put(BuiltInLootTables.STRONGHOLD_CORRIDOR.identifier().toString(), 0.05f);
+        defaultProbabilities.put(BuiltInLootTables.STRONGHOLD_CROSSING.identifier().toString(), 0.05f);
+        defaultProbabilities.put(BuiltInLootTables.END_CITY_TREASURE.identifier().toString(), 0.05f);
+        defaultProbabilities.put(BuiltInLootTables.BASTION_BRIDGE.identifier().toString(), 0.15f);
+        defaultProbabilities.put(BuiltInLootTables.BASTION_HOGLIN_STABLE.identifier().toString(), 0.15f);
+        defaultProbabilities.put(BuiltInLootTables.BASTION_OTHER.identifier().toString(), 0.15f);
+        defaultProbabilities.put(BuiltInLootTables.BASTION_TREASURE.identifier().toString(), 0.15f);
+        defaultProbabilities.put(BuiltInLootTables.NETHER_BRIDGE.identifier().toString(), 0.05f);
         return defaultProbabilities;
     }
 
