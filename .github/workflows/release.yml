@@ -23,11 +23,11 @@ jobs:
       - name: Validate Gradle wrapper
         uses: gradle/actions/wrapper-validation@v4
 
-      - name: Setup JDK 21
+      - name: Setup JDK 25
         uses: actions/setup-java@v4
         with:
           distribution: 'microsoft'
-          java-version: '21'
+          java-version: '25'
           cache: 'gradle'
 
       - name: Make gradlew executable
@@ -41,10 +41,18 @@ jobs:
           echo "mod_version=$MOD_VERSION" >> "$GITHUB_OUTPUT"
           echo "minecraft_version=$MINECRAFT_VERSION" >> "$GITHUB_OUTPUT"
           echo "jar_file=build/libs/ticket-of-eternal-keep-$MOD_VERSION.jar" >> "$GITHUB_OUTPUT"
+          echo "resource_pack_file=build/resource-packs/Ticket_of_Eternal_Keep_Resource_Pack_$MINECRAFT_VERSION.zip" >> "$GITHUB_OUTPUT"
           echo "release_notes=build/release-notes.md" >> "$GITHUB_OUTPUT"
 
       - name: Build
         run: ./gradlew build --no-daemon
+
+      - name: Build server-side resource pack
+        if: hashFiles('docs/resource-pack-26.1/pack.mcmeta') != ''
+        run: |
+          mkdir -p build/resource-packs
+          cd docs/resource-pack-26.1
+          zip -r "../../${{ steps.versions.outputs.resource_pack_file }}" .
 
       - name: Prepare release notes
         run: |
@@ -70,6 +78,16 @@ jobs:
             fi
             echo
           } >> "${{ steps.versions.outputs.release_notes }}"
+          if [ -f "${{ steps.versions.outputs.resource_pack_file }}" ]; then
+            {
+              echo
+              echo "## Server-Side Resource Pack"
+              echo
+              echo "This release includes \`$(basename '${{ steps.versions.outputs.resource_pack_file }}')\` as an optional resource pack."
+              echo "Use it only when running the mod server-side and allowing vanilla clients to see the custom ticket texture."
+              echo "Players with the mod installed client-side do not need this extra pack."
+            } >> "${{ steps.versions.outputs.release_notes }}"
+          fi
 
       - name: Create GitHub release
         uses: softprops/action-gh-release@v2
@@ -77,7 +95,9 @@ jobs:
           name: ${{ github.ref_name }}
           body_path: ${{ steps.versions.outputs.release_notes }}
           overwrite_files: true
-          files: build/libs/*.jar
+          files: |
+            build/libs/*.jar
+            ${{ steps.versions.outputs.resource_pack_file }}
 
       - name: Publish to CurseForge
         if: env.CURSEFORGE_ID != '' && env.CURSEFORGE_TOKEN != ''
@@ -92,7 +112,7 @@ jobs:
           changelog-file: ${{ steps.versions.outputs.release_notes }}
           loaders: fabric
           game-versions: ${{ steps.versions.outputs.minecraft_version }}
-          java: 21
+          java: 25
           dependencies: |
             fabric-api(required)
 
@@ -109,6 +129,6 @@ jobs:
           changelog-file: ${{ steps.versions.outputs.release_notes }}
           loaders: fabric
           game-versions: ${{ steps.versions.outputs.minecraft_version }}
-          java: 21
+          java: 25
           dependencies: |
             fabric-api(required)

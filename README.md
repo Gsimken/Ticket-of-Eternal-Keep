@@ -87,7 +87,19 @@ The ToEK item is configurable. The file is located in the `.minecraft/config` fo
 To install this mod, simply download the `.jar` file and place it in your Minecraft mods folder.
 This mod is designed to work on the server side. It provides a convenient solution for server administrators who want to enhance the gameplay experience without requiring players to install additional mods.
 
-In case you want users to have the texture, you can use the texture pack from the following [release](https://github.com/Gsimken/Ticket-of-Eternal-Keep/releases/tag/V1.1.0) on the server.
+### Server-Side Resource Pack
+
+The mod can run server-side only. Players using a vanilla client can join and use the ticket without installing the mod, but they will see the configured base item, usually paper, unless they load the resource pack.
+
+Release builds include a resource pack zip named `Ticket_of_Eternal_Keep_Resource_Pack_<minecraft-version>.zip`. This pack is only needed when running the mod server-side and you want vanilla clients to see the custom ticket texture.
+
+To use it on a server:
+- Upload the resource pack zip somewhere clients can download it.
+- Set `resource-pack=<direct-download-url>` in `server.properties`.
+- Optionally set `require-resource-pack=true` if players must use the texture.
+- Keep `CustomModelDataNumber` as `506`, or update the resource pack if you change it.
+
+If players install the mod on their client, the same client assets are already bundled in the mod jar.
 
 ## Commands
 ToEK has a command that allows an operator, or whoever has the `toek.command.give` permission, to generate a ticket at will. This ticket can be given to the player who invokes the command using `/toek give`, or to one or more players using `/toek give <players>`. The player argument accepts vanilla selectors such as `@a`, `@p`, and player names.
