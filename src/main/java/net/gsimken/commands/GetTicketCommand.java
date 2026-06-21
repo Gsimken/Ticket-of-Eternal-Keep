@@ -69,13 +69,19 @@ public class GetTicketCommand {
             }
         }
 
-        source.sendSuccess(() -> Component.translatable("command.ticket_of_eternal_keep.give_successfully"), true);
+        source.sendSuccess(() -> Component.translatableWithFallback(
+                "command.ticket_of_eternal_keep.give_successfully",
+                "Item given"
+        ), true);
         return players.size();
     }
 
     private static int reloadConfig(CommandSourceStack source) {
         TicketOfEternalKeep.configManager.loadConfig();
-        source.sendSuccess(() -> Component.translatable("command.ticket_of_eternal_keep.reload_successfully"), true);
+        source.sendSuccess(() -> Component.translatableWithFallback(
+                "command.ticket_of_eternal_keep.reload_successfully",
+                "ToEK config reloaded"
+        ), true);
         return 1;
     }
 

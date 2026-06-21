@@ -102,11 +102,27 @@ To use it on a server:
 If players install the mod on their client, the same client assets are already bundled in the mod jar.
 
 ## Commands
-ToEK has a command that allows an operator, or whoever has the `toek.command.give` permission, to generate a ticket at will. This ticket can be given to the player who invokes the command using `/toek give`, or to one or more players using `/toek give <players>`. The player argument accepts vanilla selectors such as `@a`, `@p`, and player names.
+ToEK commands require operator level 2 by default. Servers with a Fabric-compatible permissions mod, such as LuckPerms with Fabric Permission API support, can grant the permission nodes listed below instead.
 
-For compatibility with existing servers, `/getticket` and `/getticket <players>` are still available as legacy aliases. The old `toek.command.getticket` permission is also accepted.
+| Command | Permission | Description |
+|---------|------------|-------------|
+| `/toek give` | `ticket-of-eternal-keep:command.give` | Gives one ticket to the player running the command. |
+| `/toek give <players>` | `ticket-of-eternal-keep:command.give` | Gives one ticket to one or more players. Supports vanilla selectors such as `@a`, `@p`, and player names. |
+| `/getticket` | `ticket-of-eternal-keep:command.give` | Legacy alias for `/toek give`. |
+| `/getticket <players>` | `ticket-of-eternal-keep:command.give` | Legacy alias for `/toek give <players>`. |
+| `/toek reload` | `ticket-of-eternal-keep:command.reload` | Reloads `ToEK.json` without restarting the client or server. |
+| `/toek config name <name>` | `ticket-of-eternal-keep:command.config` | Saves a new ticket display name. Accepts `&` formatting codes. |
+| `/toek config lore set <line1\|line2\|...>` | `ticket-of-eternal-keep:command.config` | Replaces the ticket lore. Separate lore lines with `|`. Accepts `&` formatting codes. |
+| `/toek config lore add <line>` | `ticket-of-eternal-keep:command.config` | Adds one lore line. Accepts `&` formatting codes. |
+| `/toek config lore clear` | `ticket-of-eternal-keep:command.config` | Clears the configured lore. |
 
-The config can be reloaded without restarting the client or server using `/toek reload`. This command requires operator level 2 or the `toek.command.reload` permission.
+Examples:
+
+```mcfunction
+/toek config name &6Ticket of Eternal Keeping
+/toek config lore set &bKeep your inventory on death|&4&lConsumed when used
+/toek reload
+```
 
 ## Future Work
 The development team of the "Ticket of Eternal Keeping" mod is continuously working on improvements and expansions. The roadmap for future updates includes:

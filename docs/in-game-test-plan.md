@@ -20,6 +20,7 @@ Run this checklist for every migrated Minecraft version before publishing the ja
 6. Run `/toek give @p` and confirm the nearest player receives a ticket.
 7. Run `/toek give @a` in a multiplayer or LAN test and confirm all players receive a ticket.
 8. Run `/getticket @p` and confirm the legacy alias still accepts vanilla selectors.
+9. If testing permissions, grant `ticket-of-eternal-keep:command.give` and confirm non-operators can use the give commands.
 
 ## Inventory Keep Behavior
 
@@ -51,12 +52,17 @@ Run this checklist for every migrated Minecraft version before publishing the ja
 1. Delete `ToEK.json`.
 2. Restart the client/server.
 3. Confirm the config file is recreated with default probabilities.
-4. Change `name`, `lore`, and `CustomModelDataNumber`.
-5. Run `/toek reload`.
-6. Confirm the next generated ticket reflects those values without restarting.
-7. Remove `genericChestProbability` and `genericMobProbability` from the config.
-8. Run `/toek reload`.
-9. Confirm they are restored with defaults.
+4. Run `/toek config name &6Ticket of Eternal Keeping`.
+5. Run `/toek config lore set &bKeep your inventory on death|&4&lConsumed when used`.
+6. Confirm `ToEK.json` persists the raw `&` formatting codes.
+7. Run `/toek give` and confirm the next generated ticket reflects those values without restarting.
+8. If testing permissions, grant `ticket-of-eternal-keep:command.config` and confirm non-operators can use config commands.
+9. Change `CustomModelDataNumber`.
+10. Run `/toek reload`.
+11. Confirm the next generated ticket reflects that value without restarting.
+12. Remove `genericChestProbability` and `genericMobProbability` from the config.
+13. Run `/toek reload`.
+14. Confirm they are restored with defaults.
 
 ## Loot Drops
 
