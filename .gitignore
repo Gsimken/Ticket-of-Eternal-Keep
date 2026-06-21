@@ -33,6 +33,7 @@ crash-reports/
 logs/
 .fabric/
 run/
+run-server/
 
 # java
 

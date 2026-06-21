@@ -1,6 +1,7 @@
 package net.gsimken.utils;
 
 import net.gsimken.TicketOfEternalKeep;
+import net.gsimken.config.ConfigManager;
 import net.gsimken.config.ModConfig;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
@@ -69,8 +70,10 @@ public class TicketUtils {
         ItemStack itemStack = new ItemStack(TicketOfEternalKeep.ticketItem);
         ModConfig modConfig = TicketOfEternalKeep.configManager.getConfig();
         String name = modConfig.getName();
-        List<Component> loreLines = modConfig.getLore().stream().map(line -> (Component) Component.literal(line)).toList();
-        itemStack.set(DataComponents.ITEM_NAME, Component.literal(name));
+        List<Component> loreLines = modConfig.getLore().stream()
+                .map(line -> (Component) Component.literal(ConfigManager.formatText(line)))
+                .toList();
+        itemStack.set(DataComponents.ITEM_NAME, Component.literal(ConfigManager.formatText(name)));
 
         ItemLore loreComponent = new ItemLore(loreLines);
         itemStack.set(DataComponents.LORE, loreComponent);

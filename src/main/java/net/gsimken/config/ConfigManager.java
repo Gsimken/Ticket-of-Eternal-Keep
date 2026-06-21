@@ -41,7 +41,6 @@ public class ConfigManager {
                 saveConfigFile();
             }
             applyDebugDropsIfEnabled();
-            applyFormatting(config);
 
             try {
                 Identifier itemId = Identifier.parse(config.getItem());
@@ -66,6 +65,26 @@ public class ConfigManager {
 
     public ModConfig getConfig() {
         return config;
+    }
+
+    public void setTicketName(String name) {
+        config.setName(name);
+        saveConfigFile();
+    }
+
+    public void setTicketLore(List<String> lore) {
+        config.setLore(lore);
+        saveConfigFile();
+    }
+
+    public void addTicketLore(String line) {
+        List<String> lore = new java.util.ArrayList<>(config.getLore());
+        lore.add(line);
+        setTicketLore(lore);
+    }
+
+    public void clearTicketLore() {
+        setTicketLore(List.of());
     }
 
     static ModConfig createDefaultConfig() {
@@ -119,8 +138,12 @@ public class ConfigManager {
         TicketOfEternalKeep.LOGGER.warn("ToEK debug drops enabled: ancient_city chests and zombies drop tickets at 100%.");
     }
 
-    private static String replaceFormatSymbols(String text) {
+    public static String formatText(String text) {
         return text.replace("&", "\u00A7");
+    }
+
+    private static String replaceFormatSymbols(String text) {
+        return formatText(text);
     }
 
     private Path configPath() {

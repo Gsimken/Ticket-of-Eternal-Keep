@@ -2,6 +2,7 @@ package net.gsimken.event;
 
 import net.fabricmc.fabric.api.loot.v3.LootTableEvents;
 import net.gsimken.TicketOfEternalKeep;
+import net.gsimken.config.ConfigManager;
 import net.gsimken.config.ModConfig;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
@@ -63,7 +64,7 @@ public class ModLootTableModifier {
     private static void applyTicketComponents(LootPoolSingletonContainer.Builder<?> entryBuilder) {
         ModConfig modConfig = TicketOfEternalKeep.configManager.getConfig();
         List<Component> loreLines = modConfig.getLore().stream()
-                .map(line -> (Component) Component.literal(line))
+                .map(line -> (Component) Component.literal(ConfigManager.formatText(line)))
                 .toList();
         CustomModelData customModelData = new CustomModelData(
                 List.of((float) modConfig.getCustomModelDataNumber()),
@@ -74,7 +75,7 @@ public class ModLootTableModifier {
         CompoundTag nbt = new CompoundTag();
         nbt.putBoolean(TicketOfEternalKeep.nbtName, true);
 
-        entryBuilder.apply(SetComponentsFunction.setComponent(DataComponents.ITEM_NAME, Component.literal(modConfig.getName())));
+        entryBuilder.apply(SetComponentsFunction.setComponent(DataComponents.ITEM_NAME, Component.literal(ConfigManager.formatText(modConfig.getName()))));
         entryBuilder.apply(SetComponentsFunction.setComponent(DataComponents.LORE, new ItemLore(loreLines)));
         entryBuilder.apply(SetComponentsFunction.setComponent(DataComponents.CUSTOM_MODEL_DATA, customModelData));
         entryBuilder.apply(SetComponentsFunction.setComponent(DataComponents.CUSTOM_DATA, CustomData.of(nbt)));
