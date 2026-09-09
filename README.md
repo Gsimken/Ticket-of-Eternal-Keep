@@ -33,6 +33,7 @@ The ToEK item is configurable. The file is located in the `.minecraft/config` fo
     "&4&lIt is consumed at death"
   ],
   "CustomModelDataNumber": 506,
+  "apply_curse_of_vanishing": false,
   "lootTableProbabilities": {
     "minecraft:chests/ancient_city": 0.1,
     "minecraft:chests/abandoned_mineshaft": 0.03,
@@ -67,6 +68,11 @@ The ToEK item is configurable. The file is located in the `.minecraft/config` fo
 - `name`: Changes the name of the item. Accepts `&` for color codes, such as `&6` for gold or `&b` for aqua.
 - `lore`: Changes the item description. Add as many lines as you like inside the list. Also accepts `&` for color codes.
 - `CustomModelDataNumber`: Number used for a custom texture pack. This can be used to force a texture pack from the server so players see the desired item texture.
+- `apply_curse_of_vanishing`: Controls whether items enchanted with Curse of Vanishing disappear when a ticket is consumed. The default is `false`, matching vanilla `keepInventory` behavior and preserving cursed items. Set it to `true` to restore the ticket's previous behavior and remove those items on death.
+
+### Keep Inventory Parity
+
+Tickets now match vanilla `keepInventory` by default: items with Curse of Vanishing remain in the player's inventory after death. Existing config files are automatically updated with `"apply_curse_of_vanishing": false`. Server owners who prefer the previous ticket behavior can set the option to `true` and run `/toek reload` (or restart the server).
 
 **Loot Table Probabilities:**
 - `lootTableProbabilities`: A map that configures the probability of finding the ticket in specific non-mob loot tables. Values range from `0.0` (never) to `1.0` (always/100%).

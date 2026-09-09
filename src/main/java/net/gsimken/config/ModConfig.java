@@ -1,5 +1,7 @@
 package net.gsimken.config;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.List;
 import java.util.Map;
 
@@ -12,6 +14,8 @@ public class ModConfig {
     private Map<String, Float> mobLootTableProbabilities;
     private Float genericChestProbability;
     private Float genericMobProbability;
+    @SerializedName("apply_curse_of_vanishing")
+    private Boolean applyCurseOfVanishing;
 
     // Getters y setters
 
@@ -77,6 +81,14 @@ public class ModConfig {
 
     public void setGenericMobProbability(Float genericMobProbability) {
         this.genericMobProbability = genericMobProbability;
+    }
+
+    public Boolean getApplyCurseOfVanishing() {
+        return applyCurseOfVanishing;
+    }
+
+    public void setApplyCurseOfVanishing(Boolean applyCurseOfVanishing) {
+        this.applyCurseOfVanishing = applyCurseOfVanishing;
     }
 
     public String printConfig(){
