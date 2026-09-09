@@ -21,7 +21,7 @@ public class ServerPlayerEntityMixin {
 			player.experienceLevel = oldPlayer.experienceLevel;
 			player.totalExperience = oldPlayer.totalExperience;
 			TicketUtils.consumeTicket(player);
-			if (Boolean.TRUE.equals(TicketOfEternalKeep.configManager.getConfig().getApplyCurseOfVanishing())) {
+			if (TicketOfEternalKeep.configManager.shouldApplyCurseOfVanishing()) {
 				TicketUtils.applyVanishCurse(player, oldPlayer.isCreative());
 			}
 		}

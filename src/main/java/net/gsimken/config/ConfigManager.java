@@ -67,6 +67,10 @@ public class ConfigManager {
         return config;
     }
 
+    public boolean shouldApplyCurseOfVanishing() {
+        return Boolean.TRUE.equals(config.getApplyCurseOfVanishing());
+    }
+
     public void setTicketName(String name) {
         config.setName(name);
         saveConfigFile();
