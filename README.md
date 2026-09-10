@@ -3,6 +3,8 @@
 ## Description
 This Minecraft mod introduces a new item to the game: the "Ticket of Eternal Keeping". This special item allows players to keep their inventory items upon death. The ticket is consumed in the process, making it a valuable and strategic resource.
 
+By default, items enchanted with Curse of Vanishing are also preserved, matching vanilla `keepInventory` behavior. Server owners can disable this protection and make cursed items disappear on death by setting `"apply_curse_of_vanishing": true` in `ToEK.json`.
+
 ## Locations and Probabilities
 The "Ticket of Eternal Keeping" can be found in structures and can also drop from configured mobs. Every probability is configurable via the config file.
 
