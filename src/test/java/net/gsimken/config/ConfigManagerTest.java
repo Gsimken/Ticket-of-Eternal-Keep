@@ -19,6 +19,7 @@ class ConfigManagerTest {
         assertEquals(506, config.getCustomModelDataNumber());
         assertEquals(0.005f, config.getGenericChestProbability());
         assertEquals(0.0f, config.getGenericMobProbability());
+        assertFalse(config.getApplyCurseOfVanishing());
         assertEquals(0.1f, config.getLootTableProbabilities().get("minecraft:chests/ancient_city"));
         assertEquals(0.15f, config.getLootTableProbabilities().get("minecraft:chests/bastion_treasure"));
         assertEquals(0.0f, config.getMobLootTableProbabilities().get("minecraft:entities/zombie"));
@@ -39,6 +40,7 @@ class ConfigManagerTest {
         assertNotNull(config.getMobLootTableProbabilities());
         assertEquals(0.005f, config.getGenericChestProbability());
         assertEquals(0.0f, config.getGenericMobProbability());
+        assertFalse(config.getApplyCurseOfVanishing());
     }
 
     @Test

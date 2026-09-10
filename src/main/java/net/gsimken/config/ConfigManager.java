@@ -67,6 +67,10 @@ public class ConfigManager {
         return config;
     }
 
+    public boolean shouldApplyCurseOfVanishing() {
+        return Boolean.TRUE.equals(config.getApplyCurseOfVanishing());
+    }
+
     public void setTicketName(String name) {
         config.setName(name);
         saveConfigFile();
@@ -97,6 +101,7 @@ public class ConfigManager {
         config.setMobLootTableProbabilities(defaultMobLootTableProbabilities());
         config.setGenericChestProbability(0.005f);
         config.setGenericMobProbability(0.0f);
+        config.setApplyCurseOfVanishing(false);
         return config;
     }
 
@@ -116,6 +121,10 @@ public class ConfigManager {
         }
         if (config.getGenericMobProbability() == null) {
             config.setGenericMobProbability(0.0f);
+            configUpdated = true;
+        }
+        if (config.getApplyCurseOfVanishing() == null) {
+            config.setApplyCurseOfVanishing(false);
             configUpdated = true;
         }
         return configUpdated;

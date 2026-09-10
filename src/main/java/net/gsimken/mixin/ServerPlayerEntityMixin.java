@@ -1,5 +1,6 @@
 package net.gsimken.mixin;
 
+import net.gsimken.TicketOfEternalKeep;
 import net.gsimken.utils.TicketUtils;
 import net.minecraft.server.level.ServerPlayer;
 import org.spongepowered.asm.mixin.Mixin;
@@ -20,7 +21,9 @@ public class ServerPlayerEntityMixin {
 			player.experienceLevel = oldPlayer.experienceLevel;
 			player.totalExperience = oldPlayer.totalExperience;
 			TicketUtils.consumeTicket(player);
-			TicketUtils.applyVanishCurse(player, oldPlayer.isCreative());
+			if (TicketOfEternalKeep.configManager.shouldApplyCurseOfVanishing()) {
+				TicketUtils.applyVanishCurse(player, oldPlayer.isCreative());
+			}
 		}
 	}
 
