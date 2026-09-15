@@ -14,6 +14,7 @@ import net.minecraft.commands.arguments.EntityArgument;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.permissions.PermissionLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.Prediction;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.Collection;
@@ -65,7 +66,7 @@ public class GetTicketCommand {
             ItemStack ticket = TicketUtils.createTicket();
             boolean itemGiven = player.addItem(ticket);
             if (!itemGiven) {
-                player.drop(ticket, false);
+                player.drop(ticket, false, Prediction.SERVER_ONLY);
             }
         }
 

@@ -48,11 +48,13 @@ jobs:
         run: ./gradlew build --no-daemon
 
       - name: Build server-side resource pack
-        if: hashFiles('docs/resource-pack-26.2/pack.mcmeta') != ''
         run: |
-          mkdir -p build/resource-packs
-          cd docs/resource-pack-26.2
-          zip -r "../../${{ steps.versions.outputs.resource_pack_file }}" .
+          RESOURCE_PACK_DIR="docs/resource-pack-${{ steps.versions.outputs.minecraft_version }}"
+          if [ -f "$RESOURCE_PACK_DIR/pack.mcmeta" ]; then
+            mkdir -p build/resource-packs
+            cd "$RESOURCE_PACK_DIR"
+            zip -r "../../${{ steps.versions.outputs.resource_pack_file }}" .
+          fi
 
       - name: Prepare release notes
         run: |

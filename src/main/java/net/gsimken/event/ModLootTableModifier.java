@@ -4,16 +4,17 @@ import net.fabricmc.fabric.api.loot.v3.LootTableEvents;
 import net.gsimken.TicketOfEternalKeep;
 import net.gsimken.config.ConfigManager;
 import net.gsimken.config.ModConfig;
+import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.entries.LootItem;
-import net.minecraft.world.level.storage.loot.entries.LootPoolSingletonContainer;
+import net.minecraft.world.level.storage.loot.entries.UniformContainerBase;
 import net.minecraft.world.level.storage.loot.functions.SetComponentsFunction;
 import net.minecraft.world.level.storage.loot.predicates.LootItemRandomChanceCondition;
-import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
+import net.minecraft.world.level.storage.loot.providers.number.ints.ConstantValue;
 import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.item.component.CustomModelData;
 import net.minecraft.world.item.component.ItemLore;
@@ -53,15 +54,15 @@ public class ModLootTableModifier {
     }
 
     private static LootPool.Builder addTicketToPool(float probability) {
-        LootPoolSingletonContainer.Builder<?> entryBuilder = LootItem.lootTableItem(TicketOfEternalKeep.ticketItem)
+        UniformContainerBase.Builder<?> entryBuilder = LootItem.lootTableItem(TicketOfEternalKeep.ticketItem)
                 .when(LootItemRandomChanceCondition.randomChance(probability));
         applyTicketComponents(entryBuilder);
         return LootPool.lootPool()
-                .setRolls(ConstantValue.exactly(1))
+                .setRolls(Holder.direct(new ConstantValue(1)))
                 .add(entryBuilder);
     }
 
-    private static void applyTicketComponents(LootPoolSingletonContainer.Builder<?> entryBuilder) {
+    private static void applyTicketComponents(UniformContainerBase.Builder<?> entryBuilder) {
         ModConfig modConfig = TicketOfEternalKeep.configManager.getConfig();
         List<Component> loreLines = modConfig.getLore().stream()
                 .map(line -> (Component) Component.literal(ConfigManager.formatText(line)))
