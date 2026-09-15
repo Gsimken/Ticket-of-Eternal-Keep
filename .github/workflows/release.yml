@@ -12,8 +12,6 @@ jobs:
   release:
     runs-on: ubuntu-22.04
     env:
-      MODRINTH_ID: ${{ vars.MODRINTH_ID }}
-      MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
       CURSEFORGE_ID: ${{ vars.CURSEFORGE_ID }}
       CURSEFORGE_TOKEN: ${{ secrets.CURSEFORGE_TOKEN }}
     steps:
@@ -107,23 +105,6 @@ jobs:
         with:
           curseforge-id: ${{ env.CURSEFORGE_ID }}
           curseforge-token: ${{ env.CURSEFORGE_TOKEN }}
-          files: ${{ steps.versions.outputs.jar_file }}
-          name: Ticket of Eternal Keep ${{ steps.versions.outputs.mod_version }}
-          version: ${{ steps.versions.outputs.mod_version }}
-          version-type: release
-          changelog-file: ${{ steps.versions.outputs.release_notes }}
-          loaders: fabric
-          game-versions: ${{ steps.versions.outputs.minecraft_version }}
-          java: 25
-          dependencies: |
-            fabric-api(required)
-
-      - name: Publish to Modrinth
-        if: env.MODRINTH_ID != '' && env.MODRINTH_TOKEN != ''
-        uses: Kir-Antipov/mc-publish@v3.3
-        with:
-          modrinth-id: ${{ env.MODRINTH_ID }}
-          modrinth-token: ${{ env.MODRINTH_TOKEN }}
           files: ${{ steps.versions.outputs.jar_file }}
           name: Ticket of Eternal Keep ${{ steps.versions.outputs.mod_version }}
           version: ${{ steps.versions.outputs.mod_version }}
