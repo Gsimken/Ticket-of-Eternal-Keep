@@ -115,3 +115,7 @@ jobs:
           java: 25
           dependencies: |
             fabric-api(required)
+
+  publish-modrinth:
+    uses: ./.github/workflows/publish-modrinth.yml
+    secrets: inherit

@@ -1,14 +1,12 @@
 name: publish-modrinth
 
 on:
-  push:
-    tags:
-      - '*'
+  workflow_call:
   workflow_dispatch:
   schedule:
-    # Retry at an off-peak minute every three hours. Scheduled workflows use
-    # the latest commit from the default branch.
-    - cron: '17 */3 * * *'
+    # Check hourly so the first retry occurs roughly one hour after release.
+    # Later attempts are gated to three-hour intervals.
+    - cron: '17 * * * *'
 
 permissions:
   contents: read
@@ -66,8 +64,57 @@ jobs:
             echo "Version $MOD_VERSION is not on Modrinth yet; continuing with publication."
           fi
 
+      - name: Determine whether a retry is due
+        id: retry_window
+        shell: bash
+        env:
+          MOD_VERSION: ${{ steps.versions.outputs.mod_version }}
+          VERSION_EXISTS: ${{ steps.existing_version.outputs.exists }}
+        run: |
+          if [ "$VERSION_EXISTS" = 'true' ]; then
+            echo "eligible=false" >> "$GITHUB_OUTPUT"
+            echo "No retry is needed because the version already exists."
+            exit 0
+          fi
+
+          if [ "${{ github.event_name }}" != 'schedule' ]; then
+            echo "eligible=true" >> "$GITHUB_OUTPUT"
+            echo "Manual or release-triggered publication is eligible immediately."
+            exit 0
+          fi
+
+          RELEASE_DATA=$(curl --silent --show-error --retry 3 \
+            --header 'User-Agent: Gsimken/Ticket-of-Eternal-Keep (GitHub Actions)' \
+            "$GITHUB_API_URL/repos/$GITHUB_REPOSITORY/releases/tags/$MOD_VERSION")
+          PUBLISHED_AT=$(jq -r '.published_at // empty' <<< "$RELEASE_DATA")
+
+          if [ -z "$PUBLISHED_AT" ]; then
+            echo "eligible=false" >> "$GITHUB_OUTPUT"
+            echo "No GitHub release exists for $MOD_VERSION; automatic retry is disabled for this version."
+            exit 0
+          fi
+
+          RELEASE_EPOCH=$(date -d "$PUBLISHED_AT" +%s)
+          NOW_EPOCH=$(date +%s)
+          ELAPSED_SECONDS=$((NOW_EPOCH - RELEASE_EPOCH))
+
+          if [ "$ELAPSED_SECONDS" -lt 3600 ]; then
+            echo "eligible=false" >> "$GITHUB_OUTPUT"
+            echo "The first retry window opens one hour after the GitHub release."
+            exit 0
+          fi
+
+          ELAPSED_HOURS=$(((ELAPSED_SECONDS - 3600) / 3600))
+          if [ $((ELAPSED_HOURS % 3)) -eq 0 ]; then
+            echo "eligible=true" >> "$GITHUB_OUTPUT"
+            echo "The scheduled retry window is open."
+          else
+            echo "eligible=false" >> "$GITHUB_OUTPUT"
+            echo "The next three-hour retry window has not opened yet."
+          fi
+
       - name: Validate Modrinth publishing token
-        if: steps.existing_version.outputs.exists != 'true'
+        if: steps.retry_window.outputs.eligible == 'true'
         shell: bash
         run: |
           if [ -z "$MODRINTH_TOKEN" ]; then
@@ -76,11 +123,11 @@ jobs:
           fi
 
       - name: Validate Gradle wrapper
-        if: steps.existing_version.outputs.exists != 'true'
+        if: steps.retry_window.outputs.eligible == 'true'
         uses: gradle/actions/wrapper-validation@v4
 
       - name: Setup JDK 25
-        if: steps.existing_version.outputs.exists != 'true'
+        if: steps.retry_window.outputs.eligible == 'true'
         uses: actions/setup-java@v4
         with:
           distribution: microsoft
@@ -88,15 +135,15 @@ jobs:
           cache: gradle
 
       - name: Make gradlew executable
-        if: steps.existing_version.outputs.exists != 'true'
+        if: steps.retry_window.outputs.eligible == 'true'
         run: chmod +x ./gradlew
 
       - name: Build
-        if: steps.existing_version.outputs.exists != 'true'
+        if: steps.retry_window.outputs.eligible == 'true'
         run: ./gradlew build --no-daemon
 
       - name: Prepare release notes
-        if: steps.existing_version.outputs.exists != 'true'
+        if: steps.retry_window.outputs.eligible == 'true'
         shell: bash
         env:
           MOD_VERSION: ${{ steps.versions.outputs.mod_version }}
@@ -115,7 +162,7 @@ jobs:
           fi
 
       - name: Publish to Modrinth
-        if: steps.existing_version.outputs.exists != 'true'
+        if: steps.retry_window.outputs.eligible == 'true'
         uses: Kir-Antipov/mc-publish@v3.3
         with:
           modrinth-id: ${{ env.MODRINTH_ID }}
@@ -131,6 +178,31 @@ jobs:
           dependencies: |
             fabric-api(required)
 
+      - name: Verify publication on Modrinth
+        if: steps.retry_window.outputs.eligible == 'true'
+        shell: bash
+        env:
+          MOD_VERSION: ${{ steps.versions.outputs.mod_version }}
+        run: |
+          for ATTEMPT in $(seq 1 18); do
+            CACHE_BUSTER=$(date +%s)
+            VERSIONS=$(curl --fail --silent --show-error --retry 3 \
+              --header 'User-Agent: Gsimken/Ticket-of-Eternal-Keep (GitHub Actions)' \
+              "https://api.modrinth.com/v2/project/$MODRINTH_ID/version?include_changelog=false&cache_bust=$CACHE_BUSTER")
+
+            if jq -e --arg version "$MOD_VERSION" \
+              'any(.[]; .version_number == $version)' <<< "$VERSIONS" > /dev/null; then
+              echo "Verified Modrinth version $MOD_VERSION."
+              exit 0
+            fi
+
+            echo "Verification attempt $ATTEMPT did not find $MOD_VERSION yet."
+            sleep 10
+          done
+
+          echo "::error::The publisher reported success, but Modrinth does not expose version $MOD_VERSION."
+          exit 1
+
       - name: Publication summary
         if: always()
         shell: bash
@@ -141,6 +213,9 @@ jobs:
           if [ "$VERSION_EXISTS" = 'true' ]; then
             echo "### Modrinth $MOD_VERSION" >> "$GITHUB_STEP_SUMMARY"
             echo "Version already exists; nothing was uploaded." >> "$GITHUB_STEP_SUMMARY"
+          elif [ "${{ steps.retry_window.outputs.eligible }}" != 'true' ]; then
+            echo "### Modrinth $MOD_VERSION" >> "$GITHUB_STEP_SUMMARY"
+            echo "No publication is due in this retry window." >> "$GITHUB_STEP_SUMMARY"
           else
             echo "### Modrinth $MOD_VERSION" >> "$GITHUB_STEP_SUMMARY"
             echo "Publication was attempted. Failed attempts will be retried by the three-hour schedule unless the version appears on Modrinth first." >> "$GITHUB_STEP_SUMMARY"
